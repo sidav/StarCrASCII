@@ -17,7 +17,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"\\--/", colors: colors}
 		b = &pawn{name: "Command Center", maxHitpoints: 1000, givesSupply: 10,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
-			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 100, costM: 400},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 400},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tscv"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
@@ -31,7 +31,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"=o", colors: colors}
 		b = &pawn{name: "Supply Depot", maxHitpoints: 200, givesSupply: 8,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
-			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 100},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 30, costM: 100},
 		}
 
 	case "tbarracks":
@@ -64,7 +64,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"\\||/", colors: colors}
 		b = &pawn{name: "Hatchery", maxHitpoints: 1000, givesSupply: 10,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
-			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 99, costM: 300},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 300},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"zdrone"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
@@ -83,7 +83,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"/||\\", colors: colors}
 		b = &pawn{name: "Nexus", maxHitpoints: 1000, givesSupply: 10,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
-			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 99, costM: 400},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 400},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pprobe"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}

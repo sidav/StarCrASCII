@@ -7,6 +7,9 @@ func doAllProduction(m *gameMap) { // does the building itself
 			if u.currentConstructionStatus.buildType == buildtype_protoss || u.currentConstructionStatus.buildType == buildtype_zerg {
 				u.currentConstructionStatus.currentConstructionAmount += 1
 				u.hitpoints += u.maxHitpoints / (u.currentConstructionStatus.maxConstructionAmount)
+				if u.hitpoints > u.maxHitpoints {
+					u.hitpoints = u.maxHitpoints
+				}
 				if u.currentConstructionStatus.isCompleted() {
 					u.currentConstructionStatus = nil
 					u.reportOrderCompletion("Construction completed")
@@ -30,6 +33,9 @@ func doAllProduction(m *gameMap) { // does the building itself
 					tBld.buildingInfo.hasBeenPlaced = true
 					tBld.currentConstructionStatus.buildType = u.productionInfo.buildType
 					tBld.hitpoints = tBld.maxHitpoints % (tBld.currentConstructionStatus.maxConstructionAmount)
+					if tBld.hitpoints == 0 {
+						tBld.hitpoints = 1 
+					}
 					u.faction.spendResources(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV)
 					m.addBuilding(tBld, false)
 					if u.productionInfo.buildType == buildtype_protoss {
@@ -59,6 +65,9 @@ func doAllProduction(m *gameMap) { // does the building itself
 			if u.productionInfo.buildType == buildtype_terran && tBld.IsCloseupToCoords(ux, uy) {
 				tBld.currentConstructionStatus.currentConstructionAmount += u.productionInfo.builderCoeff
 				tBld.hitpoints += tBld.maxHitpoints / (tBld.currentConstructionStatus.maxConstructionAmount/ u.productionInfo.builderCoeff)
+				if tBld.hitpoints > tBld.maxHitpoints {
+					tBld.hitpoints = tBld.maxHitpoints
+				}
 				if tBld.currentConstructionStatus.isCompleted() {
 					tBld.currentConstructionStatus = nil
 					u.order = nil
