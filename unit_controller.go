@@ -55,7 +55,9 @@ func (u *pawn) doMoveOrder() { // TODO: rewrite
 
 	if vx == 0 && vy == 0 && (ux != ox || uy != oy) { // path stops not at the target
 		u.reportOrderCompletion("Can't find route to target. Arrived to closest position.") // can be dangerous if order is not move
-		u.order = nil
+		if order.orderType == order_move {
+			u.order = nil
+		}
 		return
 	}
 
@@ -67,8 +69,10 @@ func (u *pawn) doMoveOrder() { // TODO: rewrite
 		u.nextTickToAct = CURRENT_TICK + u.moveInfo.ticksForMoveSingleCell
 
 		if u.x == ox && u.y == oy {
-			u.reportOrderCompletion("Arrived")
-			u.order = nil
+			if order.orderType == order_move {
+				u.reportOrderCompletion("Arrived")
+				u.order = nil
+			}
 			return
 		}
 	}
@@ -97,6 +101,26 @@ func (p *pawn) doGatherMineralsOrder() {
 				CURRENT_MAP.tileMap[mx][my].mineralsAmount = 0
 				p.res.mineralsCarry = mins
 				p.nextTickToAct = CURRENT_TICK + mins*p.res.maxMineralsCarry
+			}
+		} else { // find pseudorandom mineral field close to first one
+			const MINERAL_SEARCH_AREA = 3
+			mineralsLocsx := make([]int, 0)
+			mineralsLocsy := make([]int, 0)
+			for i := mx - MINERAL_SEARCH_AREA; i <= mx+MINERAL_SEARCH_AREA; i++ {
+				for j := my - MINERAL_SEARCH_AREA; j <= my+MINERAL_SEARCH_AREA; j++ {
+					if CURRENT_MAP.getMineralsAtCoordinates(i, j) > 0 {
+						mineralsLocsx = append(mineralsLocsx, i)
+						mineralsLocsy = append(mineralsLocsy, j)
+					}
+				}
+			}
+			if len(mineralsLocsx) == 0 {
+				p.reportOrderCompletion("No minerals nearby. Going on standby.")
+				p.order = nil
+			} else {
+				num := CURRENT_TICK % len(mineralsLocsx)
+				order.xSecondary = mineralsLocsx[num]
+				order.ySecondary = mineralsLocsy[num]
 			}
 		}
 	} else { // return to command center or whatever
