@@ -32,6 +32,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doConstructOrder(m)
 	case order_gather_minerals:
 		u.doGatherMineralsOrder()
+	case order_return_resources:
+		u.doReturnResourcesOrder()
 	}
 
 	// move
@@ -142,32 +144,47 @@ func (p *pawn) doGatherMineralsOrder() {
 			CURRENT_MAP.depleteMineralField(mx, my)
 			log.appendMessage("Mineral field depleted.")
 		}
-	} else { // return to command center or whatever. TODO: create separate "findResourceReceiver()" function.
-		var closestResourceReceiver *pawn
-		closestRRDist := 999999
-		for _, cc := range CURRENT_MAP.pawns {
-			if cc.res != nil && cc.res.receivesResources {
-				rx, ry := cc.getCenter()
-				dist := (rx-ux)*(rx-ux) + (ry-uy)*(ry-uy)
-				if dist < closestRRDist {
-					closestRRDist = dist
-					closestResourceReceiver = cc
-				}
+		order.orderType = order_return_resources
+	}
+}
+
+func (p *pawn) doReturnResourcesOrder() {
+	order := p.order
+	ux, uy := p.getCoords()
+	// TODO: create separate "findNearestResourceReceiver()" function.
+	var closestResourceReceiver *pawn
+	closestRRDist := 999999
+	for _, cc := range CURRENT_MAP.pawns {
+		if cc.res != nil && cc.res.receivesResources {
+			rx, ry := cc.getCenter()
+			dist := (rx-ux)*(rx-ux) + (ry-uy)*(ry-uy)
+			if dist < closestRRDist {
+				closestRRDist = dist
+				closestResourceReceiver = cc
 			}
 		}
-		if closestResourceReceiver == nil {
-			p.reportOrderCompletion("Nowhere to return the resources.")
+	}
+	if closestResourceReceiver == nil {
+		p.reportOrderCompletion("Nowhere to return the resources.")
+		p.nextTickToAct = CURRENT_TICK + 10
+		return
+	} else {
+		if closestResourceReceiver.IsCloseupToCoords(p.x, p.y) { // resources unload
+		if p.res.mineralsCarry > 0 {
+			p.faction.economy.minerals += p.res.mineralsCarry
+			p.res.mineralsCarry = 0
 			p.nextTickToAct = CURRENT_TICK + 10
-			return
-		} else {
-			if closestRRDist < 16 { // resources unload
-				p.faction.economy.minerals += p.res.mineralsCarry
-				p.res.mineralsCarry = 0
-				p.nextTickToAct = CURRENT_TICK + 10
-			}
-			order.x, order.y = closestResourceReceiver.getCenter()
-			p.doMoveOrder()
+			order.orderType = order_gather_minerals
 		}
+		if p.res.vespeneCarry > 0 {
+			p.faction.economy.vespene += p.res.vespeneCarry
+			p.res.vespeneCarry = 0
+			p.nextTickToAct = CURRENT_TICK + 10
+			// order.orderType = order_gather_minerals // TODO: order_gather_vespene
+		}
+		}
+		order.x, order.y = closestResourceReceiver.getCenter()
+		p.doMoveOrder()
 	}
 }
 

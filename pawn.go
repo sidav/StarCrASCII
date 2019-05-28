@@ -80,6 +80,15 @@ func (p *pawn) getCenter() (int, int) {
 	}
 }
 
+func (p *pawn) IsCloseupToCoords(x, y int) bool {
+	if p.isBuilding() {
+		return !geometry.AreCoordsInRect(x, y, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h) &&
+			geometry.AreCoordsInRect(x, y, p.x-1, p.y-1, p.buildingInfo.w+2, p.buildingInfo.h+2)
+	} else {
+		return x != p.x && y != p.y && geometry.AreCoordsInRect(x, y, p.x-1, p.y-1, 3, 3)
+	}
+}
+
 //func (p *pawn) executeOrders(m *gameMap)	{
 //	if p.isBuilding() {
 //		return
@@ -122,6 +131,8 @@ func (p *pawn) getCurrentOrderDescription() string {
 		return "MOVING WHILE ENGAGING"
 	case order_gather_minerals:
 		return "GATHERING MINERALS"
+	case order_return_resources:
+		return "RETURNING RESOURCES"
 	case order_build:
 		return fmt.Sprintf("CONSTRUCTING (%d%% ready)",
 			p.order.buildingToConstruct.currentConstructionStatus.getCompletionPercent())
