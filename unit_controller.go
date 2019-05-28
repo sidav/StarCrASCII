@@ -170,18 +170,18 @@ func (p *pawn) doReturnResourcesOrder() {
 		return
 	} else {
 		if closestResourceReceiver.IsCloseupToCoords(p.x, p.y) { // resources unload
-		if p.res.mineralsCarry > 0 {
-			p.faction.economy.minerals += p.res.mineralsCarry
-			p.res.mineralsCarry = 0
-			p.nextTickToAct = CURRENT_TICK + 10
-			order.orderType = order_gather_minerals
-		}
-		if p.res.vespeneCarry > 0 {
-			p.faction.economy.vespene += p.res.vespeneCarry
-			p.res.vespeneCarry = 0
-			p.nextTickToAct = CURRENT_TICK + 10
-			// order.orderType = order_gather_minerals // TODO: order_gather_vespene
-		}
+			if p.res.mineralsCarry > 0 {
+				p.faction.economy.minerals += p.res.mineralsCarry
+				p.res.mineralsCarry = 0
+				p.nextTickToAct = CURRENT_TICK + 10
+				order.orderType = order_gather_minerals
+			}
+			if p.res.vespeneCarry > 0 {
+				p.faction.economy.vespene += p.res.vespeneCarry
+				p.res.vespeneCarry = 0
+				p.nextTickToAct = CURRENT_TICK + 10
+				// order.orderType = order_gather_minerals // TODO: order_gather_vespene
+			}
 		}
 		order.x, order.y = closestResourceReceiver.getCenter()
 		p.doMoveOrder()
@@ -270,11 +270,6 @@ func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets 
 	order := u.order
 	tBld := order.buildingToConstruct
 	ux, uy := u.getCoords()
-	ox, oy := tBld.getCenter()
-
-	building_w := tBld.buildingInfo.w + 1
-	building_h := tBld.buildingInfo.h + 1
-	sqdistance := (ox-ux)*(ox-ux) + (oy-uy)*(oy-uy)
 
 	if tBld == nil {
 		log.appendMessage(u.name + " NIL BUILD")
@@ -287,9 +282,8 @@ func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets 
 		return
 	}
 
-	if sqdistance < building_w*building_w || sqdistance < building_h*building_h { // is in building range
-		// u.res.metalSpending = u.productionInfo.builderCoeff * tBld.currentConstructionStatus.costM / tBld.currentConstructionStatus.maxConstructionAmount
-	} else { // out of range, move to the construction site
+	if !tBld.IsCloseupToCoords(ux, uy) {
+		// out of range, move to the construction site
 		order.x, order.y = tBld.getCenter()
 		u.doMoveOrder()
 		log.appendMessage(u.name + " MOVES TO BUILD")

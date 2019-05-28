@@ -7,12 +7,8 @@ func doAllProduction(m *gameMap) { // does the building itself
 			tBld := u.order.buildingToConstruct
 
 			ux, uy := u.getCoords()
-			ox, oy := tBld.getCenter()
-			building_w := tBld.buildingInfo.w + 1
-			building_h := tBld.buildingInfo.h + 1
-			sqdistance := (ox-ux)*(ox-ux) + (oy-uy)*(oy-uy)
 
-			if tBld.buildingInfo.hasBeenPlaced == false && (sqdistance <= building_w*building_w || sqdistance <= building_h*building_h) { // place the carcass
+			if tBld.buildingInfo.hasBeenPlaced == false && tBld.IsCloseupToCoords(ux, uy) { // place the carcass
 				if u.faction.canAffordSpend(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV) {
 					u.reportOrderCompletion("Starts construction")
 					tBld.buildingInfo.hasBeenPlaced = true
@@ -35,7 +31,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 				continue
 			}
 
-			if sqdistance < building_w*building_w || sqdistance < building_h*building_h {
+			if tBld.IsCloseupToCoords(ux, uy) {
 				tBld.currentConstructionStatus.currentConstructionAmount += u.productionInfo.builderCoeff
 				if tBld.currentConstructionStatus.isCompleted() {
 					tBld.currentConstructionStatus = nil
