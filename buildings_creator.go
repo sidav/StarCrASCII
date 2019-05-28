@@ -15,41 +15,42 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"|xx|" +
 			"|xx|" +
 			"\\--/", colors: colors}
-		b = &pawn{name: "Command Center",
+		b = &pawn{name: "Command Center", givesSupply: 10,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 100, costM: 400},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tscv"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
 
-	case "solar":
+	case "tsupply":
 		colors := []int{
 			-1, 7,
 			7, -1}
 		app := &buildingAppearance{chars: "" +
-			"==" +
-			"==", colors: colors}
-		b = &pawn{name: "Solar Collector",
+			"o=" +
+			"=o", colors: colors}
+		b = &pawn{name: "Supply Depot", givesSupply: 8,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
 		}
 
-	case "mextractor":
+	case "tbarracks":
 		colors := []int{
 			-1, 7, -1,
 			7, -1, 7,
 			-1, 7, -1,
 		}
-		app := &buildingAppearance{chars:
-		"#|#" +
-			"-%-" +
-			"#|#", colors: colors}
-		b = &pawn{name: "Metal Extractor",
-			buildingInfo:              &building{w: 3, h: 3, appearance: app, canBeBuiltOnMetalOnly: true, allowsTightPlacement: true},
+		app := &buildingAppearance{chars: "" +
+			"#=#" +
+			"=%=" +
+			"#=#", colors: colors}
+		b = &pawn{name: "Barracks",
+			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
-			res: &pawnResourceInformation{energyDrain: 9, isMetalExtractor: true},
+			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tmarine"}},
 		}
 	}
+
 	if b.maxHitpoints == 0 {
 		b.maxHitpoints = 25
 	}

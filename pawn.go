@@ -1,8 +1,8 @@
 package main
 
 import (
-	geometry "github.com/sidav/golibrl/geometry"
 	"fmt"
+	"github.com/sidav/golibrl/geometry"
 )
 
 type pawn struct {
@@ -19,6 +19,7 @@ type pawn struct {
 	currentConstructionStatus *constructionInformation
 	moveInfo                  *pawnMovementInformation
 	weapons                   []*pawnWeaponInformation
+	takesSupply, givesSupply  int
 	nextTickToAct             int
 	isCommander               bool
 	sightRadius, radarRadius  int

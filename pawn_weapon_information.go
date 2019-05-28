@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 type pawnWeaponInformation struct {
-	attackRadius, attackDelay, attackEnergyCost int
+	attackRadius, attackDelay int
 	attacksLand, attacksAir bool // these are not mutually excluding
 	hitscan *WeaponHitscan // TODO: non-hitscan (projectile) weapons
 	canBeFiredOnMove bool
@@ -19,9 +19,6 @@ func (wpn *pawnWeaponInformation) getDescriptionString() string{
 		}
 		if wpn.hitscan.heavyMod != 0 {
 			desc += fmt.Sprintf(" (vs heavy %d)", wpn.hitscan.baseDamage + wpn.hitscan.heavyMod)
-		}
-		if wpn.attackEnergyCost != 0 {
-			desc += fmt.Sprintf(", %d energy per shot", wpn.attackEnergyCost)
 		}
 	}
 	return desc 
