@@ -6,7 +6,7 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 		return
 	}
 	if m.tileMap[x][y].mineralsAmount > 0 && p.canCollectMinerals() {
-		p.setOrder(&order{orderType: order_gather, x: x, y: y})
+		p.setOrder(&order{orderType: order_gather_minerals, xSecondary: x, ySecondary: y})
 		log.appendMessage(p.name + ": gathering minerals.")
 		return
 	}

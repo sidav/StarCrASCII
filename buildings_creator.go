@@ -18,7 +18,8 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 		b = &pawn{name: "Command Center",
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 100, costM: 400},
-			productionInfo: &productionInformation{builderCoeff: 1, allowedUnits: []string{"tscv"}},
+			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tscv"}},
+			res:                       &pawnResourceInformation{receivesResources: true},
 		}
 
 	case "solar":
@@ -40,13 +41,13 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			-1, 7, -1,
 		}
 		app := &buildingAppearance{chars:
-			"#|#" +
+		"#|#" +
 			"-%-" +
 			"#|#", colors: colors}
 		b = &pawn{name: "Metal Extractor",
 			buildingInfo:              &building{w: 3, h: 3, appearance: app, canBeBuiltOnMetalOnly: true, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
-			res:                       &pawnResourceInformation{energyDrain: 9, isMetalExtractor: true},
+			res: &pawnResourceInformation{energyDrain: 9, isMetalExtractor: true},
 		}
 	}
 	if b.maxHitpoints == 0 {

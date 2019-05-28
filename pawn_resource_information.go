@@ -1,8 +1,9 @@
 package main
 
 type pawnResourceInformation struct {
-	mineralsCarry, maxMineralsCarry int
-	vespeneCarry, maxVespeneCarry   int
+	mineralsCarry, maxMineralsCarry, ticksToMineMineral int
+	vespeneCarry, maxVespeneCarry                       int
+	receivesResources                                   bool // command centre, whatever
 	// TODO: delete fields below
 	energyDrain                   int  //
 	metalSpending, energySpending int  // both are unconditional only

@@ -30,6 +30,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doBuildOrder(m)
 	case order_construct:
 		u.doConstructOrder(m)
+	case order_gather_minerals:
+		u.doGatherMineralsOrder()
 	}
 
 	// move
@@ -68,6 +70,60 @@ func (u *pawn) doMoveOrder() { // TODO: rewrite
 			u.reportOrderCompletion("Arrived")
 			u.order = nil
 			return
+		}
+	}
+}
+
+func (p *pawn) doGatherMineralsOrder() {
+	order := p.order
+
+	ux, uy := p.getCoords()
+	mx, my := order.xSecondary, order.ySecondary
+
+	if p.res.mineralsCarry == 0 {
+		if !geometry.AreCoordsInRange(ux, uy, mx, my, 1) {
+			order.x = mx
+			order.y = my
+			p.doMoveOrder()
+			return
+		}
+		mins := CURRENT_MAP.getMineralsAtCoordinates(mx, my)
+		if mins > 0 {
+			if mins > p.res.maxMineralsCarry {
+				CURRENT_MAP.tileMap[mx][my].mineralsAmount -= p.res.maxMineralsCarry
+				p.res.mineralsCarry = p.res.maxMineralsCarry
+				p.nextTickToAct = CURRENT_TICK + p.res.ticksToMineMineral*p.res.maxMineralsCarry
+			} else {
+				CURRENT_MAP.tileMap[mx][my].mineralsAmount = 0
+				p.res.mineralsCarry = mins
+				p.nextTickToAct = CURRENT_TICK + mins*p.res.maxMineralsCarry
+			}
+		}
+	} else { // return to command center or whatever
+		var closestResourceReceiver *pawn
+		closestRRDist := 999999
+		for _, cc := range CURRENT_MAP.pawns {
+			if cc.res != nil && cc.res.receivesResources {
+				rx, ry := cc.getCenter()
+				dist := (rx-ux)*(rx-ux) + (ry-uy)*(ry-uy)
+				if dist < closestRRDist {
+					closestRRDist = dist
+					closestResourceReceiver = cc
+				}
+			}
+		}
+		if closestResourceReceiver == nil {
+			p.reportOrderCompletion("Nowhere to return the resources.")
+			p.nextTickToAct = CURRENT_TICK + 10
+			return
+		} else {
+			if closestRRDist < 16 { // resources unload
+				p.faction.economy.minerals += p.res.mineralsCarry
+				p.res.mineralsCarry = 0
+				p.nextTickToAct = CURRENT_TICK + 10
+			}
+			order.x, order.y = closestResourceReceiver.getCenter()
+			p.doMoveOrder()
 		}
 	}
 }

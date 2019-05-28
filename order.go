@@ -3,19 +3,19 @@ package main
 type ORDER_TYPE_ENUM uint8
 
 const (
-	order_hold        ORDER_TYPE_ENUM = iota
-	order_move        ORDER_TYPE_ENUM = iota
-	order_attack      ORDER_TYPE_ENUM = iota
-	order_attack_move ORDER_TYPE_ENUM = iota
-	order_build       ORDER_TYPE_ENUM = iota // maybe merge build and repair?
-	order_construct   ORDER_TYPE_ENUM = iota
-	order_gather      ORDER_TYPE_ENUM = iota
+	order_hold            ORDER_TYPE_ENUM = iota
+	order_move            ORDER_TYPE_ENUM = iota
+	order_attack          ORDER_TYPE_ENUM = iota
+	order_attack_move     ORDER_TYPE_ENUM = iota
+	order_build           ORDER_TYPE_ENUM = iota // maybe merge build and repair?
+	order_construct       ORDER_TYPE_ENUM = iota
+	order_gather_minerals ORDER_TYPE_ENUM = iota
 )
 
 type order struct {
-	orderType  ORDER_TYPE_ENUM
-	x, y       int
-	targetPawn *pawn
+	orderType                    ORDER_TYPE_ENUM
+	x, xSecondary, y, ySecondary int
+	targetPawn                   *pawn
 
 	buildingHasBeenPlaced bool // for build orders
 	buildingToConstruct   *pawn

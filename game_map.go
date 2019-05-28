@@ -1,8 +1,8 @@
 package main
 
 import (
-	geometry "github.com/sidav/golibrl/geometry"
 	"github.com/sidav/golibrl/astar"
+	"github.com/sidav/golibrl/geometry"
 )
 
 var (
@@ -72,7 +72,7 @@ func (g *gameMap) getEnemyPawnsInRadiusFrom(x, y, radius int, f *faction) []*paw
 	for _, p := range g.pawns {
 		px, py := p.getCenter()
 		if p.faction != f {
-			if p.isBuilding() && geometry.AreCircleAndRectOverlapping(x, y, radius, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h ){
+			if p.isBuilding() && geometry.AreCircleAndRectOverlapping(x, y, radius, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h) {
 				arr = append(arr, p)
 				continue
 			}
@@ -91,6 +91,10 @@ func (g *gameMap) getBuildingAtCoordinates(x, y int) *pawn {
 		}
 	}
 	return nil
+}
+
+func (g *gameMap) getMineralsAtCoordinates(x, y int) int {
+	return g.tileMap[x][y].mineralsAmount
 }
 
 func (g *gameMap) getNumberOfMetalDepositsInRect(x, y, w, h int) int {
@@ -125,7 +129,7 @@ func (g *gameMap) getNumberOfThermalDepositsUnderBuilding(b *pawn) int {
 	return g.getNumberOfThermalDepositsInRect(b.x, b.y, b.buildingInfo.w, b.buildingInfo.h)
 }
 
-func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tight bool) bool  {
+func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tight bool) bool {
 	for _, p := range g.pawns {
 		if p.isBuilding() {
 			if p.buildingInfo.allowsTightPlacement && tight {
@@ -192,4 +196,21 @@ func (g *gameMap) createCostMapForPathfinding() *[][]int {
 
 func (g *gameMap) getPathFromTo(fx, fy, tx, ty int) *astar.Cell {
 	return astar.FindPath(g.createCostMapForPathfinding(), fx, fy, tx, ty, true, true, false)
+}
+
+func (g *gameMap) cleanupMinerals() {
+	for x := 0; x < mapW; x++ {
+		for y := 0; y < mapH; y++ {
+			currTile := g.tileMap[x][y]
+			if currTile.isMineralField && currTile.mineralsAmount <= 0 {
+				if currTile.isMineralField && currTile.mineralsAmount < 0 {
+					log.warning("Minerals < 0 !!!")
+				}
+				currTile.mineralsAmount = 0
+				currTile.isMineralField = false
+				currTile.isPassable = true
+				currTile.appearance.char = '.'
+			}
+		}
+	}
 }
