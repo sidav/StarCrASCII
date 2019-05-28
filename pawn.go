@@ -16,7 +16,7 @@ type pawn struct {
 	order                     *order
 	res                       *pawnResourceInformation
 	productionInfo            *productionInformation
-	currentConstructionStatus *constructionInformation
+	currentConstructionStatus *underConstructionInformation
 	moveInfo                  *pawnMovementInformation
 	weapons                   []*pawnWeaponInformation
 	takesSupply, givesSupply  int

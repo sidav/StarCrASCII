@@ -9,7 +9,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 		newUnit = &pawn{name: "Terran SCV", maxHitpoints: 200, takesSupply: 1,
 			unitInfo:       &unit{appearance: ccell{char: 's'}},
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
-			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 10, costM: 50},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_terran,
 				allowedBuildings: []string{"tcommand", "tsupply", "tbarracks"},
 			},
@@ -24,7 +24,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 		newUnit = &pawn{name: "Terran Marine", maxHitpoints: 40, isLight: true, takesSupply: 1,
 			unitInfo:       &unit{appearance: ccell{char: 'm'}},
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true}, regenPeriod: 7,
-			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 10, costM: 50},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 5, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:5},
@@ -36,7 +36,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 		newUnit = &pawn{name: "Zerg Drone", maxHitpoints: 50, takesSupply: 1,
 			unitInfo:       &unit{appearance: ccell{char: 'd'}},
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
-			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 10, costM: 50},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_zerg,
 				allowedBuildings: []string{"zhatchery"},
 			},
@@ -52,7 +52,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 		newUnit = &pawn{name: "Protoss Probe", maxHitpoints: 50, takesSupply: 1,
 			unitInfo:       &unit{appearance: ccell{char: 'p'}},
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
-			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 10, costM: 50},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_protoss,
 				allowedBuildings: []string{"pnexus"},
 			},
@@ -68,7 +68,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 		newUnit = &pawn{name: "UNKNOWN UNIT " + codename,
 			moveInfo:                  &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true},
 			unitInfo:                  &unit{appearance: ccell{char: '?'}},
-			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 10, costM: 250},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 250},
 		}
 	}
 	if newUnit.maxHitpoints == 0 {

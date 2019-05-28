@@ -282,6 +282,14 @@ func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets 
 		return
 	}
 
+	if u.productionInfo.buildType == buildtype_zerg { // zerg will always move to center
+		// out of range, move to the construction site
+		order.x, order.y = tBld.getCenter()
+		u.doMoveOrder()
+		log.appendMessage(u.name + " MOVES TO BUILD")
+		return
+	}
+
 	if !tBld.IsCloseupToCoords(ux, uy) {
 		// out of range, move to the construction site
 		order.x, order.y = tBld.getCenter()

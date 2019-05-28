@@ -2,19 +2,43 @@ package main
 
 func doAllProduction(m *gameMap) { // does the building itself
 	for _, u := range m.pawns {
-		// buildings construction
+		// buildings self-construction (zerg and protoss)
+		if u.currentConstructionStatus != nil {
+			if u.currentConstructionStatus.buildType == buildtype_protoss || u.currentConstructionStatus.buildType == buildtype_zerg {
+				u.currentConstructionStatus.currentConstructionAmount += 1
+				u.hitpoints += u.maxHitpoints / (u.currentConstructionStatus.maxConstructionAmount)
+				if u.currentConstructionStatus.isCompleted() {
+					u.currentConstructionStatus = nil
+					u.reportOrderCompletion("Construction completed")
+				}
+			}
+		}
+		// buildings construction by units
 		if u.order != nil && u.order.orderType == order_build {
 			tBld := u.order.buildingToConstruct
 
 			ux, uy := u.getCoords()
+			bcx, bcy := tBld.getCenter()
 
-			if tBld.buildingInfo.hasBeenPlaced == false && tBld.IsCloseupToCoords(ux, uy) { // place the carcass
+			isInBuildProximity := tBld.buildingInfo.hasBeenPlaced == false &&
+				(u.productionInfo.buildType == buildtype_zerg && ux == bcx && uy == bcy || // zerg should build from center
+				u.productionInfo.buildType != buildtype_zerg && tBld.IsCloseupToCoords(ux, uy))
+			
+			if isInBuildProximity { // place the carcass
 				if u.faction.canAffordSpend(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV) {
 					u.reportOrderCompletion("Starts construction")
 					tBld.buildingInfo.hasBeenPlaced = true
+					tBld.currentConstructionStatus.buildType = u.productionInfo.buildType
 					tBld.hitpoints = tBld.maxHitpoints % (tBld.currentConstructionStatus.maxConstructionAmount)
 					u.faction.spendResources(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV)
 					m.addBuilding(tBld, false)
+					if u.productionInfo.buildType == buildtype_protoss {
+						u.order = nil
+						u.reportOrderCompletion("Warp-in initiated.")
+					}
+					if u.productionInfo.buildType == buildtype_zerg {
+						CURRENT_MAP.removePawn(u)
+					}
 				} else {
 					u.reportOrderCompletion("Awaiting resources...")
 					continue
@@ -32,7 +56,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 				continue
 			}
 
-			if tBld.IsCloseupToCoords(ux, uy) {
+			if u.productionInfo.buildType == buildtype_terran && tBld.IsCloseupToCoords(ux, uy) {
 				tBld.currentConstructionStatus.currentConstructionAmount += u.productionInfo.builderCoeff
 				tBld.hitpoints += tBld.maxHitpoints / (tBld.currentConstructionStatus.maxConstructionAmount/ u.productionInfo.builderCoeff)
 				if tBld.currentConstructionStatus.isCompleted() {
