@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="39f6d2c6-dc2d-48e7-b3a4-878c6f47751c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/missions.go" beforeDir="false" afterPath="$PROJECT_DIR$/missions.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pawn.go" beforeDir="false" afterPath="$PROJECT_DIR$/pawn.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/unit_controller.go" beforeDir="false" afterPath="$PROJECT_DIR$/unit_controller.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,24 +57,24 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gitignore" value="2" />
-          <entry key="go" value="48" />
+          <entry key="go" value="49" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Go" value="48" />
+          <entry key="Go" value="49" />
           <entry key="PLAIN_TEXT" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gitignore" value="17" />
-          <entry key="go" value="3497" />
+          <entry key="go" value="3910" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="3497" />
+          <entry key="Go" value="3910" />
           <entry key="PLAIN_TEXT" value="17" />
         </counts>
       </usages-collector>
@@ -85,11 +87,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/unit_controller.go">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="122" column="18" selection-start-line="122" selection-start-column="18" selection-end-line="122" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/pawn.go">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
-              <caret line="90" column="41" selection-start-line="90" selection-start-column="41" selection-end-line="90" selection-end-column="41" />
+              <caret line="123" column="34" selection-start-line="123" selection-start-column="34" selection-end-line="123" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -99,18 +110,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="229">
               <caret line="36" column="127" selection-start-line="36" selection-start-column="127" selection-end-line="36" selection-end-column="127" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/player_controller_mouse.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="189" column="37" selection-start-line="189" selection-start-column="37" selection-end-line="189" selection-end-column="37" />
-              <folding>
-                <element signature="e#14#125#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -154,8 +153,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/missions.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="70" column="7" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
+            <state relative-caret-position="1169">
+              <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -190,6 +189,7 @@
       <find>thermal</find>
       <find>dista</find>
       <find>3</find>
+      <find>doi</find>
     </findStrings>
     <replaceStrings>
       <replace>Construction</replace>
@@ -213,7 +213,6 @@
         <option value="$PROJECT_DIR$/pawn_nanolather_information.go" />
         <option value="$PROJECT_DIR$/pawn_possible_orders.go" />
         <option value="$PROJECT_DIR$/pawn_resource_information.go" />
-        <option value="$PROJECT_DIR$/pawn.go" />
         <option value="$PROJECT_DIR$/buildings_creator.go" />
         <option value="$PROJECT_DIR$/building.go" />
         <option value="$PROJECT_DIR$/pawn_weapon_information.go" />
@@ -222,14 +221,15 @@
         <option value="$PROJECT_DIR$/unit_controller_production.go" />
         <option value="$PROJECT_DIR$/faction_economy.go" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/missions.go" />
         <option value="$PROJECT_DIR$/order.go" />
         <option value="$PROJECT_DIR$/order_creator.go" />
         <option value="$PROJECT_DIR$/tile.go" />
         <option value="$PROJECT_DIR$/game_map_initializer.go" />
         <option value="$PROJECT_DIR$/game_map.go" />
         <option value="$PROJECT_DIR$/main.go" />
+        <option value="$PROJECT_DIR$/missions.go" />
         <option value="$PROJECT_DIR$/unit_controller.go" />
+        <option value="$PROJECT_DIR$/pawn.go" />
       </list>
     </option>
   </component>
@@ -476,13 +476,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pawn.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/faction_economy.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="400">
@@ -521,13 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/missions.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="70" column="7" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/order_creator.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
@@ -563,10 +549,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/missions.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1169">
+          <caret line="70" column="4" selection-start-line="70" selection-start-column="4" selection-end-line="70" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/unit_controller.go">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="122" column="18" selection-start-line="122" selection-start-column="18" selection-end-line="122" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pawn.go">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
-          <caret line="90" column="41" selection-start-line="90" selection-start-column="41" selection-end-line="90" selection-end-column="41" />
+          <caret line="123" column="34" selection-start-line="123" selection-start-column="34" selection-end-line="123" selection-end-column="34" />
         </state>
       </provider>
     </entry>

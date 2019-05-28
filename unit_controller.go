@@ -38,7 +38,7 @@ func (u *pawn) executeOrders(m *gameMap) {
 
 }
 
-func (u *pawn) doMoveOrder() { // TODO: rewrite
+func (u *pawn) doMoveOrder() bool { // Returns true if route exists. TODO: rewrite
 	order := u.order
 
 	ox, oy := order.x, order.y
@@ -58,7 +58,7 @@ func (u *pawn) doMoveOrder() { // TODO: rewrite
 		if order.orderType == order_move {
 			u.order = nil
 		}
-		return
+		return false
 	}
 
 	if u.coll_canMoveByVector(vx, vy) {
@@ -73,8 +73,34 @@ func (u *pawn) doMoveOrder() { // TODO: rewrite
 				u.reportOrderCompletion("Arrived")
 				u.order = nil
 			}
-			return
+			return true
 		}
+	}
+	return true
+}
+
+func (p *pawn) switchToAnotherMineralFieldNearby() { // find pseudorandom mineral field close to the ordered one
+	order := p.order
+	mx, my := order.xSecondary, order.ySecondary
+	const MINERAL_SEARCH_AREA = 4
+	mineralsLocsx := make([]int, 0)
+	mineralsLocsy := make([]int, 0)
+	for i := mx - MINERAL_SEARCH_AREA; i <= mx+MINERAL_SEARCH_AREA; i++ {
+		for j := my - MINERAL_SEARCH_AREA; j <= my+MINERAL_SEARCH_AREA; j++ {
+			if areCoordsValid(i, j) && CURRENT_MAP.getMineralsAtCoordinates(i, j) > 0 {
+				mineralsLocsx = append(mineralsLocsx, i)
+				mineralsLocsy = append(mineralsLocsy, j)
+			}
+		}
+	}
+	if len(mineralsLocsx) == 0 {
+		p.reportOrderCompletion("No minerals nearby. Going on standby.")
+		p.order = nil
+		return
+	} else {
+		num := CURRENT_TICK % len(mineralsLocsx)
+		order.xSecondary = mineralsLocsx[num]
+		order.ySecondary = mineralsLocsy[num]
 	}
 }
 
@@ -84,35 +110,25 @@ func (p *pawn) doGatherMineralsOrder() {
 	ux, uy := p.getCoords()
 	mx, my := order.xSecondary, order.ySecondary
 
+	if p.res == nil {
+		log.warning("Unit " + p.name + " is trying to gather minerals! Whaaaat the heeeeck?")
+		p.order.orderType = order_move
+		return
+	}
+
 	if p.res.mineralsCarry == 0 {
 		mins := CURRENT_MAP.getMineralsAtCoordinates(mx, my)
 		if mins <= 0 {
-			// find pseudorandom mineral field close to first one
-			const MINERAL_SEARCH_AREA = 4
-			mineralsLocsx := make([]int, 0)
-			mineralsLocsy := make([]int, 0)
-			for i := mx - MINERAL_SEARCH_AREA; i <= mx+MINERAL_SEARCH_AREA; i++ {
-				for j := my - MINERAL_SEARCH_AREA; j <= my+MINERAL_SEARCH_AREA; j++ {
-					if areCoordsValid(i, j) && CURRENT_MAP.getMineralsAtCoordinates(i, j) > 0 {
-						mineralsLocsx = append(mineralsLocsx, i)
-						mineralsLocsy = append(mineralsLocsy, j)
-					}
-				}
-			}
-			if len(mineralsLocsx) == 0 {
-				p.reportOrderCompletion("No minerals nearby. Going on standby.")
-				p.order = nil
-				return
-			} else {
-				num := CURRENT_TICK % len(mineralsLocsx)
-				order.xSecondary = mineralsLocsx[num]
-				order.ySecondary = mineralsLocsy[num]
-			}
+			p.switchToAnotherMineralFieldNearby()
+			return
 		}
 		if !geometry.AreCoordsInRange(ux, uy, mx, my, 1) {
 			order.x = mx
 			order.y = my
-			p.doMoveOrder()
+			pathSuccess := p.doMoveOrder()
+			if !pathSuccess {
+				p.switchToAnotherMineralFieldNearby()
+			}
 			return
 		}
 		if mins > p.res.maxMineralsCarry {
