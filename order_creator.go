@@ -7,21 +7,23 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 	}
 	if m.tileMap[x][y].mineralsAmount > 0 && p.canCollectMinerals() {
 		p.setOrder(&order{orderType: order_gather_minerals, xSecondary: x, ySecondary: y})
-		log.appendMessage(p.name + ": gathering minerals.")
+		log.appendMessage(p.name + ": gathering minerals")
 		return
 	}
 	target := m.getPawnAtCoordinates(x, y)
 	if target != nil {
 		if target.faction != p.faction {
 			p.setOrder(&order{orderType: order_attack, targetPawn: target, x: x, y: y})
-			log.appendMessage(p.name + ": attacking.")
+			log.appendMessage(p.name + ": attacking")
 			return
 		}
-		//if target.isBuilding() && target.currentConstructionStatus.isCompleted() == false {
-		//	p.setOrder(&order{orderType: order_build, buildingToConstruct: target})
-		//	log.appendMessage(p.name + ": Helps nanolathing")
-		//	return
-		//}
+		if target.isBuilding() && target.currentConstructionStatus.isCompleted() == false {
+			if p.productionInfo.buildType == buildtype_terran && target.currentConstructionStatus.buildType == buildtype_terran {
+				p.setOrder(&order{orderType: order_build, buildingToConstruct: target})
+				log.appendMessage(p.name + ": builds")
+			}
+			return
+		}
 	}
 	if p.canMove() {
 		if p.faction.cursor.currentCursorMode == CURSOR_AMOVE {

@@ -23,7 +23,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 			isInBuildProximity := tBld.buildingInfo.hasBeenPlaced == false &&
 				(u.productionInfo.buildType == buildtype_zerg && ux == bcx && uy == bcy || // zerg should build from center
 				u.productionInfo.buildType != buildtype_zerg && tBld.IsCloseupToCoords(ux, uy))
-			
+
 			if isInBuildProximity { // place the carcass
 				if u.faction.canAffordSpend(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV) {
 					u.reportOrderCompletion("Starts construction")
