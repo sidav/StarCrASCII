@@ -94,7 +94,7 @@ func main() {
 			f.recalculateSupply(CURRENT_MAP)
 		}
 		doAllProduction(CURRENT_MAP)
-		CURRENT_MAP.cleanupMinerals()
+		// CURRENT_MAP.cleanupMinerals()
 		timeForTurn := int(time.Since(startTime) / time.Millisecond)
 		debug_write("Time for turn: " + strconv.Itoa(timeForTurn) + "ms") // TODO: make it removable
 	}

@@ -198,19 +198,14 @@ func (g *gameMap) getPathFromTo(fx, fy, tx, ty int) *astar.Cell {
 	return astar.FindPath(g.createCostMapForPathfinding(), fx, fy, tx, ty, true, true, false)
 }
 
-func (g *gameMap) cleanupMinerals() {
-	for x := 0; x < mapW; x++ {
-		for y := 0; y < mapH; y++ {
-			currTile := g.tileMap[x][y]
-			if currTile.isMineralField && currTile.mineralsAmount <= 0 {
-				if currTile.isMineralField && currTile.mineralsAmount < 0 {
-					log.warning("Minerals < 0 !!!")
-				}
-				currTile.mineralsAmount = 0
-				currTile.isMineralField = false
-				currTile.isPassable = true
-				currTile.appearance.char = '.'
-			}
+func (g *gameMap) depleteMineralField(x, y int) {
+	currTile := g.tileMap[x][y]
+	if currTile.mineralsAmount <= 0 {
+		if currTile.mineralsAmount < 0 {
+			log.warning("Minerals < 0 !!!")
 		}
+		currTile.mineralsAmount = 0
+		currTile.isPassable = true
+		currTile.appearance.char = '.'
 	}
 }

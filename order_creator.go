@@ -29,7 +29,12 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 		} else {
 			p.setOrder(&order{orderType: order_move, x: x, y: y})
 		}
-	}  else if p.canConstructUnits() {
+	} else if p.canConstructUnits() {
+		if CURRENT_MAP.getMineralsAtCoordinates(x, y) > 0 {
+			p.productionInfo.defaultOrderForUnitBuilt = &order{orderType: order_gather_minerals, x: x, y: y, xSecondary: x, ySecondary: y}
+			p.reportOrderCompletion("mine minerals set")
+			return
+		}
 		if p.faction.cursor.currentCursorMode == CURSOR_AMOVE {
 			p.productionInfo.defaultOrderForUnitBuilt = &order{orderType: order_attack_move, x: x, y: y}
 			p.reportOrderCompletion("default engage location set")

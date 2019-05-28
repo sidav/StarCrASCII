@@ -25,6 +25,7 @@ type order struct {
 func (clone *order) cloneFrom(o *order) {
 	clone.orderType = o.orderType
 	clone.x, clone.y = o.x, o.y
+	clone.xSecondary, clone.ySecondary = o.xSecondary, o.ySecondary
 	clone.targetPawn = o.targetPawn
 	clone.buildingHasBeenPlaced = o.buildingHasBeenPlaced
 	clone.buildingToConstruct = o.buildingToConstruct

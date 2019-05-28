@@ -101,6 +101,8 @@ func (p *pawn) doGatherMineralsOrder() {
 				CURRENT_MAP.tileMap[mx][my].mineralsAmount = 0
 				p.res.mineralsCarry = mins
 				p.nextTickToAct = CURRENT_TICK + mins*p.res.maxMineralsCarry
+				CURRENT_MAP.depleteMineralField(mx, my)
+				log.appendMessage("Mineral field depleted.")
 			}
 		} else { // find pseudorandom mineral field close to first one
 			const MINERAL_SEARCH_AREA = 3
@@ -108,7 +110,7 @@ func (p *pawn) doGatherMineralsOrder() {
 			mineralsLocsy := make([]int, 0)
 			for i := mx - MINERAL_SEARCH_AREA; i <= mx+MINERAL_SEARCH_AREA; i++ {
 				for j := my - MINERAL_SEARCH_AREA; j <= my+MINERAL_SEARCH_AREA; j++ {
-					if CURRENT_MAP.getMineralsAtCoordinates(i, j) > 0 {
+					if areCoordsValid(i, j) && CURRENT_MAP.getMineralsAtCoordinates(i, j) > 0 {
 						mineralsLocsx = append(mineralsLocsx, i)
 						mineralsLocsy = append(mineralsLocsy, j)
 					}
@@ -123,7 +125,7 @@ func (p *pawn) doGatherMineralsOrder() {
 				order.ySecondary = mineralsLocsy[num]
 			}
 		}
-	} else { // return to command center or whatever
+	} else { // return to command center or whatever. TODO: create separate "findResourceReceiver()" function.
 		var closestResourceReceiver *pawn
 		closestRRDist := 999999
 		for _, cc := range CURRENT_MAP.pawns {
