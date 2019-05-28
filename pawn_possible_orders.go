@@ -8,6 +8,10 @@ func (p *pawn) canConstructUnits() bool {
 	return p.productionInfo != nil && len(p.productionInfo.allowedUnits) > 0
 }
 
+func (p *pawn) canCollectMinerals() bool {
+	return p.res != nil && p.res.maxMineralsCarry > 0
+}
+
 func (p *pawn) canMove() bool {
 	return p.moveInfo != nil
 }

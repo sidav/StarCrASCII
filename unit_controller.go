@@ -249,7 +249,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 				continue
 			}
 			if uCnst.currentConstructionStatus.currentConstructionAmount == 0 {
-				if u.faction.canAffordSpend(uCnst.currentConstructionStatus.costM, uCnst.currentConstructionStatus.costM) {
+				if u.faction.canAffordSpend(uCnst.currentConstructionStatus.costM, uCnst.currentConstructionStatus.costV) {
 					u.faction.spendResources(uCnst.currentConstructionStatus.costM, uCnst.currentConstructionStatus.costV)
 				} else {
 					u.reportOrderCompletion("Awaiting resources...")

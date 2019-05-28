@@ -9,6 +9,7 @@ const (
 	order_attack_move ORDER_TYPE_ENUM = iota
 	order_build       ORDER_TYPE_ENUM = iota // maybe merge build and repair?
 	order_construct   ORDER_TYPE_ENUM = iota
+	order_gather      ORDER_TYPE_ENUM = iota
 )
 
 type order struct {
