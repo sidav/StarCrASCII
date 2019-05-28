@@ -50,7 +50,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tmarine"}},
 		}
 
-	// zerg
+		// zerg
 	case "zhatchery":
 		colors := []int{
 			7, 7, 7, 7,
@@ -69,7 +69,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
 
-	//protoss
+		//protoss
 	case "pnexus":
 		colors := []int{
 			7, 7, 7, 7,
@@ -87,10 +87,24 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pprobe"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
+	case "pgateway":
+		colors := []int{
+			-1, 7, -1,
+			7, -1, 7,
+			-1, 7, -1,
+		}
+		app := &buildingAppearance{chars: "" +
+			"#|#" +
+			">*<" +
+			"#|#", colors: colors}
+		b = &pawn{name: "Gateway", maxHitpoints: 500,
+			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
+			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pzealot"}},
+		}
 	}
-
 	if b.maxHitpoints == 0 {
-		b.maxHitpoints = 25
+	b.maxHitpoints = 25
 	}
 	b.hitpoints = b.maxHitpoints
 	b.x = x
@@ -98,10 +112,10 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 	b.faction = f
 	b.codename = codename
 	if b.sightRadius == 0 {
-		b.sightRadius = b.buildingInfo.w + 2
+	b.sightRadius = b.buildingInfo.w + 2
 	}
 	if b.productionInfo != nil && b.res == nil {
-		b.res = &pawnResourceInformation{} // adds zero-value resource info struct for spendings usage.
+	b.res = &pawnResourceInformation{} // adds zero-value resource info struct for spendings usage.
 	}
 	return b
 }

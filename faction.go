@@ -27,7 +27,7 @@ type faction struct {
 func createFaction(name string, n int, playerControlled, aiControlled bool) *faction { // temporary
 	fctn := &faction{
 		playerControlled: playerControlled, aiControlled: aiControlled, name: name, factionNumber: n,
-		economy: &factionEconomy{minerals: 100, vespene: 0}, cursor: &cursor{},
+		economy: &factionEconomy{minerals: 5000, vespene: 1000}, cursor: &cursor{},
 	}
 	if aiControlled {
 		fctn.aiData = ai_createAiData()

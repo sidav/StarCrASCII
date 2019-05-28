@@ -54,12 +54,23 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_protoss,
-				allowedBuildings: []string{"pnexus"},
+				allowedBuildings: []string{"pnexus", "pgateway"},
 			},
 			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 5},
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 1, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:4},
+				},
+			},
+		}
+	case "pzealot":
+		newUnit = &pawn{name: "Protoss Zealot", maxHitpoints: 80, isLight: true, takesSupply: 2,
+			unitInfo:       &unit{appearance: ccell{char: 'Z'}},
+			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true}, regenPeriod: 7,
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 15, costM: 100},
+			weapons: []*pawnWeaponInformation{
+				{attackDelay: 10, attackRadius: 1, attacksLand: true,
+					hitscan: &WeaponHitscan{baseDamage:8},
 				},
 			},
 		}

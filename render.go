@@ -1,8 +1,8 @@
 package main
 
 import (
-	geometry "github.com/sidav/golibrl/geometry"
 	cw "github.com/sidav/golibrl/console"
+	"github.com/sidav/golibrl/geometry"
 )
 
 var (
@@ -24,13 +24,13 @@ func r_setFgColorByCcell(c *ccell) {
 func r_updateBoundsIfNeccessary(force bool) {
 	if cw.WasResized() || force {
 		CONSOLE_W, CONSOLE_H = cw.GetConsoleSize()
-		VIEWPORT_W           = CONSOLE_W / 2
-		VIEWPORT_H           = CONSOLE_H - LOG_HEIGHT - 1
-		SIDEBAR_X            = VIEWPORT_W + 1
-		SIDEBAR_W            = CONSOLE_W - VIEWPORT_W - 1
-		SIDEBAR_H            = CONSOLE_H - LOG_HEIGHT
-		SIDEBAR_FLOOR_2      = 7  // y-coord right below resources info
-		SIDEBAR_FLOOR_3      = 11 // y-coord right below "floor 2"
+		VIEWPORT_W = CONSOLE_W / 2
+		VIEWPORT_H = CONSOLE_H - LOG_HEIGHT - 1
+		SIDEBAR_X = VIEWPORT_W + 1
+		SIDEBAR_W = CONSOLE_W - VIEWPORT_W - 1
+		SIDEBAR_H = CONSOLE_H - LOG_HEIGHT
+		SIDEBAR_FLOOR_2 = 7  // y-coord right below resources info
+		SIDEBAR_FLOOR_3 = 11 // y-coord right below "floor 2"
 	}
 }
 
@@ -73,7 +73,7 @@ func r_renderUIOutline(f *faction) {
 	if IS_PAUSED {
 		cw.SetBgColor(cw.BLACK)
 		cw.SetFgColor(cw.YELLOW)
-		cw.PutString("TACTICAL PAUSE", VIEWPORT_W / 2 - 7, VIEWPORT_H)
+		cw.PutString("TACTICAL PAUSE", VIEWPORT_W/2-7, VIEWPORT_H)
 	}
 	cw.SetBgColor(cw.BLACK)
 }
@@ -105,7 +105,7 @@ func renderPawnsInViewport(f *faction, g *gameMap) {
 		cx, cy := p.getCenter()
 		if f.areCoordsInRadarRadius(cx, cy) {
 			cw.SetFgColor(cw.RED)
-			renderCharByGlobalCoords('?', cx,cy)
+			renderCharByGlobalCoords('?', cx, cy)
 		}
 		if p.isBuilding() {
 			renderBuilding(f, p, g, vx, vy, false)
@@ -115,7 +115,7 @@ func renderPawnsInViewport(f *faction, g *gameMap) {
 	}
 }
 
-func r_renderSelectedPawns(f* faction, selection *[]*pawn) {
+func r_renderSelectedPawns(f *faction, selection *[]*pawn) {
 	vx, vy := f.cursor.getCameraCoords()
 	for _, p := range *selection {
 		if p.isUnit() {
@@ -128,7 +128,7 @@ func r_renderSelectedPawns(f* faction, selection *[]*pawn) {
 
 func renderUnit(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 	u := p.unitInfo
-	if areGlobalCoordsOnScreen(p.x, p.y) && f.areCoordsInSight(p.x, p.y){
+	if areGlobalCoordsOnScreen(p.x, p.y) && f.areCoordsInSight(p.x, p.y) {
 		tileApp := u.appearance
 		// r, g, b := getFactionRGB(u.faction.factionNumber)
 		// cw.SetFgColorRGB(r, g, b)\
@@ -153,7 +153,7 @@ func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 		for y := 0; y < b.h; y++ {
 			if p.currentConstructionStatus == nil {
 				color := app.colors[x+b.w*y]
-				if f.areCoordsInSight(bx+x,by+y) {
+				if f.areCoordsInSight(bx+x, by+y) {
 					if color == -1 {
 						colorToRender = p.faction.getFactionColor()
 					} else {
@@ -163,10 +163,8 @@ func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 					colorToRender = cw.DARK_BLUE
 				}
 			} else { // building is under construction
-				colorToRender = cw.DARK_GREEN
-				if getCurrentTurn() % 2 == 0 {
-					colorToRender = cw.GREEN
-				}
+				renderBuildingUnderConstruction(f, p, vx, vy, inverse)
+				return
 			}
 			if areGlobalCoordsOnScreen(bx+x, by+y) && f.wereCoordsSeen(bx+x, by+y) {
 				if inverse {
@@ -176,6 +174,72 @@ func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 					cw.SetFgColor(colorToRender)
 				}
 				cw.PutChar(int32(app.chars[x+b.w*y]), bx+x-vx, by+y-vy)
+			}
+		}
+	}
+	cw.SetBgColor(cw.BLACK)
+}
+
+func renderBuildingUnderConstruction(f *faction, p *pawn, vx, vy int, inverse bool) {
+	b := p.buildingInfo
+	bx, by := p.getCoords()
+	colorToRender := 0
+	for x := 0; x < b.w; x++ {
+		for y := 0; y < b.h; y++ {
+			// building is under construction
+			charToRender := '?'
+			switch p.currentConstructionStatus.buildType {
+			case buildtype_terran:
+				charToRender = '+'
+				colorToRender = cw.DARK_GRAY
+				if b.w > 1 {
+					// the next code is magic
+					frame := p.currentConstructionStatus.currentConstructionAmount % (2*b.w - 2)
+					if frame < b.w && frame == x || frame >= b.w && 2*(b.w-1)-frame == x {
+						colorToRender = cw.DARK_YELLOW
+						charToRender = '='
+					}
+				} else { // another animation for width = 1 (for escaping division by zero above)
+					if getCurrentTurn()%2 == 0 {
+						charToRender = '='
+						colorToRender = cw.DARK_YELLOW
+					}
+				}
+			case buildtype_zerg:
+				colorToRender = cw.DARK_GRAY
+				charToRender = 'o'
+				if getCurrentTurn()%2 == 0 {
+					charToRender = 'O'
+					colorToRender = cw.DARK_GREEN
+				}
+			case buildtype_protoss:
+				colorToRender = cw.DARK_CYAN
+				if (x+y+getCurrentTurn()) % 2 == 0 {
+					colorToRender = cw.CYAN
+				}
+				cx, cy := float32(b.w-1)/2, float32(b.h-1)/2
+				if (cx-float32(x))*(cx-float32(x)) + (cy-float32(y))*(cy-float32(y)) >= float32(b.w) {
+					charToRender = '.'
+				} else {
+					switch (x + y + getCurrentTurn()) % 3 {
+					case 0:
+						charToRender = '*'
+					case 1:
+						charToRender = 'x'
+					case 2:
+						charToRender = 'X'
+					}
+				}
+			}
+
+			if areGlobalCoordsOnScreen(bx+x, by+y) && f.wereCoordsSeen(bx+x, by+y) {
+				if inverse {
+					cw.SetBgColor(colorToRender)
+					cw.SetFgColor(cw.BLACK)
+				} else {
+					cw.SetFgColor(colorToRender)
+				}
+				cw.PutChar(charToRender, bx+x-vx, by+y-vy)
 			}
 		}
 	}
