@@ -85,27 +85,10 @@ func (p *pawn) doGatherMineralsOrder() {
 	mx, my := order.xSecondary, order.ySecondary
 
 	if p.res.mineralsCarry == 0 {
-		if !geometry.AreCoordsInRange(ux, uy, mx, my, 1) {
-			order.x = mx
-			order.y = my
-			p.doMoveOrder()
-			return
-		}
 		mins := CURRENT_MAP.getMineralsAtCoordinates(mx, my)
-		if mins > 0 {
-			if mins > p.res.maxMineralsCarry {
-				CURRENT_MAP.tileMap[mx][my].mineralsAmount -= p.res.maxMineralsCarry
-				p.res.mineralsCarry = p.res.maxMineralsCarry
-				p.nextTickToAct = CURRENT_TICK + p.res.ticksToMineMineral*p.res.maxMineralsCarry
-			} else {
-				CURRENT_MAP.tileMap[mx][my].mineralsAmount = 0
-				p.res.mineralsCarry = mins
-				p.nextTickToAct = CURRENT_TICK + mins*p.res.maxMineralsCarry
-				CURRENT_MAP.depleteMineralField(mx, my)
-				log.appendMessage("Mineral field depleted.")
-			}
-		} else { // find pseudorandom mineral field close to first one
-			const MINERAL_SEARCH_AREA = 3
+		if mins <= 0 {
+			// find pseudorandom mineral field close to first one
+			const MINERAL_SEARCH_AREA = 4
 			mineralsLocsx := make([]int, 0)
 			mineralsLocsy := make([]int, 0)
 			for i := mx - MINERAL_SEARCH_AREA; i <= mx+MINERAL_SEARCH_AREA; i++ {
@@ -119,11 +102,29 @@ func (p *pawn) doGatherMineralsOrder() {
 			if len(mineralsLocsx) == 0 {
 				p.reportOrderCompletion("No minerals nearby. Going on standby.")
 				p.order = nil
+				return
 			} else {
 				num := CURRENT_TICK % len(mineralsLocsx)
 				order.xSecondary = mineralsLocsx[num]
 				order.ySecondary = mineralsLocsy[num]
 			}
+		}
+		if !geometry.AreCoordsInRange(ux, uy, mx, my, 1) {
+			order.x = mx
+			order.y = my
+			p.doMoveOrder()
+			return
+		}
+		if mins > p.res.maxMineralsCarry {
+			CURRENT_MAP.tileMap[mx][my].mineralsAmount -= p.res.maxMineralsCarry
+			p.res.mineralsCarry = p.res.maxMineralsCarry
+			p.nextTickToAct = CURRENT_TICK + p.res.ticksToMineMineral*p.res.maxMineralsCarry
+		} else {
+			CURRENT_MAP.tileMap[mx][my].mineralsAmount = 0
+			p.res.mineralsCarry = mins
+			p.nextTickToAct = CURRENT_TICK + mins*p.res.maxMineralsCarry
+			CURRENT_MAP.depleteMineralField(mx, my)
+			log.appendMessage("Mineral field depleted.")
 		}
 	} else { // return to command center or whatever. TODO: create separate "findResourceReceiver()" function.
 		var closestResourceReceiver *pawn
