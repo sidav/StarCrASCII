@@ -12,6 +12,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 				if u.faction.canAffordSpend(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV) {
 					u.reportOrderCompletion("Starts construction")
 					tBld.buildingInfo.hasBeenPlaced = true
+					tBld.hitpoints = tBld.maxHitpoints % (tBld.currentConstructionStatus.maxConstructionAmount)
 					u.faction.spendResources(tBld.currentConstructionStatus.costM, tBld.currentConstructionStatus.costV)
 					m.addBuilding(tBld, false)
 				} else {
@@ -33,6 +34,7 @@ func doAllProduction(m *gameMap) { // does the building itself
 
 			if tBld.IsCloseupToCoords(ux, uy) {
 				tBld.currentConstructionStatus.currentConstructionAmount += u.productionInfo.builderCoeff
+				tBld.hitpoints += tBld.maxHitpoints / (tBld.currentConstructionStatus.maxConstructionAmount/ u.productionInfo.builderCoeff)
 				if tBld.currentConstructionStatus.isCompleted() {
 					tBld.currentConstructionStatus = nil
 					u.order = nil

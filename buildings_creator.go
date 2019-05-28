@@ -15,7 +15,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"|xx|" +
 			"|xx|" +
 			"\\--/", colors: colors}
-		b = &pawn{name: "Command Center", givesSupply: 10,
+		b = &pawn{name: "Command Center", maxHitpoints: 1000, givesSupply: 10,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 100, costM: 400},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tscv"}},
@@ -29,7 +29,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 		app := &buildingAppearance{chars: "" +
 			"o=" +
 			"=o", colors: colors}
-		b = &pawn{name: "Supply Depot", givesSupply: 8,
+		b = &pawn{name: "Supply Depot", maxHitpoints: 200, givesSupply: 8,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
 		}
@@ -44,7 +44,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"#=#" +
 			"=%=" +
 			"#=#", colors: colors}
-		b = &pawn{name: "Barracks",
+		b = &pawn{name: "Barracks", maxHitpoints: 500,
 			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tmarine"}},
