@@ -27,7 +27,14 @@ func renderFactionStats(f *faction) {
 	}
 
 	cw.SetFgColor(cw.DARK_CYAN)
-	cw.PutString(fmt.Sprintf("MINERALS %d VESPENE %d", eco.minerals, eco.vespene), statsx, 2)
+	cw.PutString(fmt.Sprintf("MINERALS %d", eco.minerals), statsx, 2)
+	cw.SetFgColor(cw.DARK_GREEN)
+	cw.PutString(fmt.Sprintf("VESPENE %d", eco.vespene), statsx, 3)
+	cw.SetFgColor(cw.DARK_BLUE)
+	renderStatusbar(fmt.Sprintf("SUPPLY %d/%d", eco.cursupply, eco.maxsupply), eco.cursupply, eco.maxsupply,
+		statsx, 4, SIDEBAR_W-3, cw.DARK_BLUE)
+	// cw.PutString(fmt.Sprintf("SUPPLY %d/%d", eco.cursupply, eco.maxsupply), statsx, 4)
+
 }
 
 func renderInfoOnCursor(f *faction, g *gameMap) {
