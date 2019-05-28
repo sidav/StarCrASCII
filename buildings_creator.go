@@ -3,7 +3,7 @@ package main
 func createBuilding(codename string, x, y int, f *faction) *pawn {
 	var b *pawn
 	switch codename {
-
+	// terran
 	case "tcommand":
 		colors := []int{
 			7, 7, 7, 7,
@@ -48,6 +48,44 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 60, costM: 100},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tmarine"}},
+		}
+
+	// zerg
+	case "zhatchery":
+		colors := []int{
+			7, 7, 7, 7,
+			7, -1, -1, 7,
+			7, -1, -1, 7,
+			7, 7, 7, 7}
+		app := &buildingAppearance{chars: "" +
+			"/||\\" +
+			"=/\\=" +
+			"=\\/=" +
+			"\\||/", colors: colors}
+		b = &pawn{name: "Hatchery", maxHitpoints: 1000, givesSupply: 10,
+			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 99, costM: 300},
+			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"zdrone"}},
+			res:                       &pawnResourceInformation{receivesResources: true},
+		}
+
+	//protoss
+	case "pnexus":
+		colors := []int{
+			7, 7, 7, 7,
+			7, -1, -1, 7,
+			7, -1, -1, 7,
+			7, 7, 7, 7}
+		app := &buildingAppearance{chars: "" +
+			"\\||/" +
+			"-xx-" +
+			"-xx-" +
+			"/||\\", colors: colors}
+		b = &pawn{name: "Nexus", maxHitpoints: 1000, givesSupply: 10,
+			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &constructionInformation{maxConstructionAmount: 99, costM: 400},
+			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pprobe"}},
+			res:                       &pawnResourceInformation{receivesResources: true},
 		}
 	}
 

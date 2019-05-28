@@ -69,6 +69,8 @@ func initMapForMission(g *gameMap, missionNumber int) {
 	g.factions = append(g.factions, createFaction("AI 1", 0,true, false))
 	g.addBuilding(createBuilding("tcommand", 8, mapH/2, g.factions[0]), true)
 	g.addPawn(createUnit("tscv", 8, mapH/2+4, g.factions[0], true))
+	g.addPawn(createUnit("zdrone", 9, mapH/2+4, g.factions[0], true))
+	g.addPawn(createUnit("pprobe", 10, mapH/2+4, g.factions[0], true))
 	g.factions[0].cursor.centralizeCamera()
 
 	g.factions = append(g.factions, createFaction("AI 2", 1, false, true))
