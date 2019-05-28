@@ -192,12 +192,22 @@ func renderBuildingUnderConstruction(f *faction, p *pawn, vx, vy int, inverse bo
 			case buildtype_terran:
 				charToRender = '+'
 				colorToRender = cw.DARK_GRAY
-				if b.w > 1 {
+				if b.w > 1 && b.h > 1 {
 					// the next code is magic
-					frame := p.currentConstructionStatus.currentConstructionAmount % (2*b.w - 2)
-					if frame < b.w && frame == x || frame >= b.w && 2*(b.w-1)-frame == x {
+					framex := p.currentConstructionStatus.currentConstructionAmount % (2*b.w - 2)
+					if framex < b.w && framex == x || framex >= b.w && 2*(b.w-1)-framex == x {
 						colorToRender = cw.DARK_YELLOW
 						charToRender = '='
+					}
+					framey := p.currentConstructionStatus.currentConstructionAmount % (2*b.h - 2)
+					if framey < b.h && framey == y || framey >= b.h && 2*(b.h-1)-framey == y {
+						if charToRender == '=' {
+							colorToRender = cw.YELLOW
+							charToRender = 'X'
+						} else {
+							colorToRender = cw.DARK_YELLOW
+							charToRender = '='
+						}
 					}
 				} else { // another animation for width = 1 (for escaping division by zero above)
 					if getCurrentTurn()%2 == 0 {
