@@ -49,6 +49,21 @@ func renderSelectCursor(f *faction) {
 			cw.PutChar(']', x+w/2+offset, cy-h/2+y)
 		}
 	}
+	globx, globy := c.getCoords()
+	resInfoString := ""
+	mineralsUnderCursor := CURRENT_MAP.getMineralsAtCoordinates(globx, globy)
+	if mineralsUnderCursor > 0 {
+		resInfoString = fmt.Sprintf(" %dx minerals ", mineralsUnderCursor)
+	}
+	//if totalThermalUnderCursor > 0 {
+	//	resInfoString += fmt.Sprintf(" %dx THERMAL ", totalThermalUnderCursor)
+	//}
+	if len(resInfoString) > 0 {
+		cw.SetBgColor(cw.DARK_GRAY)
+		cw.SetFgColor(cw.WHITE)
+		cw.PutString(resInfoString, x+2, y-1)
+	}
+	cw.SetBgColor(cw.BLACK)
 
 	// outcommented for non-SDL console
 	//cw.PutChar(16*13+10, x-1, y-1)
