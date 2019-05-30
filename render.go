@@ -85,12 +85,19 @@ func renderMapInViewport(f *faction, g *gameMap) {
 			if areCoordsValid(x, y) {
 				if f.wereCoordsSeen(x, y) {
 					tileApp := g.tileMap[x][y].appearance
+					chr := tileApp.char
 					if f.areCoordsInSight(x, y) {
+
+						mins := g.getMineralsAtCoordinates(x, y)
+						if mins > 0 && mins < MAP_DEFAULT_MINERALS_IN_PATCH/2 {
+							chr = ';'
+						}
+
 						r_setFgColorByCcell(tileApp)
 					} else {
 						cw.SetFgColor(cw.DARK_BLUE)
 					}
-					cw.PutChar(tileApp.char, x-vx, y-vy)
+					cw.PutChar(chr, x-vx, y-vy)
 				} else {
 					cw.PutChar(' ', x-vx, y-vy)
 				}
