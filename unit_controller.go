@@ -57,7 +57,7 @@ func (u *pawn) doMoveOrder() bool { // Returns true if route exists. TODO: rewri
 
 	if vx == 0 && vy == 0 && (ux != ox || uy != oy) { // path stops not at the target
 		u.reportOrderCompletion("Can't find route to target. Arrived to closest position.") // can be dangerous if order is not move
-		if order.orderType == order_move {
+		if order.orderType == order_move || order.orderType == order_attack_move {
 			u.order = nil
 		}
 		return false
@@ -71,7 +71,7 @@ func (u *pawn) doMoveOrder() bool { // Returns true if route exists. TODO: rewri
 		u.nextTickToAct = CURRENT_TICK + u.moveInfo.ticksForMoveSingleCell
 
 		if u.x == ox && u.y == oy {
-			if order.orderType == order_move {
+			if order.orderType == order_move || order.orderType == order_attack_move {
 				u.reportOrderCompletion("Arrived")
 				u.order = nil
 			}
@@ -151,19 +151,7 @@ func (p *pawn) doGatherMineralsOrder() {
 func (p *pawn) doReturnResourcesOrder() {
 	order := p.order
 	ux, uy := p.getCoords()
-	// TODO: create separate "findNearestResourceReceiver()" function.
-	var closestResourceReceiver *pawn
-	closestRRDist := 999999
-	for _, cc := range CURRENT_MAP.pawns { // TODO: optimize this, do not iterate over every pawn every turn. 
-		if cc.res != nil && cc.currentConstructionStatus == nil && cc.res.receivesResources {
-			rx, ry := cc.getCenter()
-			dist := (rx-ux)*(rx-ux) + (ry-uy)*(ry-uy)
-			if dist < closestRRDist {
-				closestRRDist = dist
-				closestResourceReceiver = cc
-			}
-		}
-	}
+	closestResourceReceiver := p.faction.getResourceReceiverNearCoords(ux, uy)
 	if closestResourceReceiver == nil {
 		p.reportOrderCompletion("Nowhere to return the resources.")
 		p.nextTickToAct = CURRENT_TICK + 10

@@ -121,8 +121,8 @@ func plr_selectPawn(f *faction, m *gameMap) *[]*pawn { // returns a pointer to a
 			}
 
 		case "DELETE": // cheat
-			f.economy.minerals += 100
-			f.economy.vespene += 100
+			f.economy.minerals += 10000
+			f.economy.vespene += 10000
 		//case "INSERT": // cheat
 		//	CURRENT_MAP.addBuilding(createBuilding("wall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
 		case "HOME": // cheat

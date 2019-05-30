@@ -27,7 +27,7 @@ type faction struct {
 func createFaction(name string, n int, playerControlled, aiControlled bool) *faction { // temporary
 	fctn := &faction{
 		playerControlled: playerControlled, aiControlled: aiControlled, name: name, factionNumber: n,
-		economy: &factionEconomy{minerals: 5000, vespene: 1000}, cursor: &cursor{},
+		economy: &factionEconomy{minerals: 50, vespene: 0}, cursor: &cursor{},
 	}
 	if aiControlled {
 		fctn.aiData = ai_createAiData()
@@ -45,6 +45,22 @@ func createFaction(name string, n int, playerControlled, aiControlled bool) *fac
 		fctn.radarCoverage[i] = make([]bool, mapH)
 	}
 	return fctn
+}
+
+func (f *faction) getResourceReceiverNearCoords(x, y int) *pawn {
+	var closestResourceReceiver *pawn
+	closestRRDist := 999999
+	for _, cc := range CURRENT_MAP.pawns { // TODO: optimize this, do not iterate over every pawn every turn.
+		if cc.res != nil && cc.faction == f && cc.currentConstructionStatus == nil && cc.res.receivesResources {
+			rx, ry := cc.getCenter()
+			dist := (rx-x)*(rx-x) + (ry-y)*(ry-y)
+			if dist < closestRRDist {
+				closestRRDist = dist
+				closestResourceReceiver = cc
+			}
+		}
+	}
+	return closestResourceReceiver
 }
 
 func (f *faction) getFactionColor() int {

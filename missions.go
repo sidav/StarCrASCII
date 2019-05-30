@@ -74,6 +74,7 @@ func initMapForMission(g *gameMap, missionNumber int) {
 	g.factions[0].cursor.centralizeCamera()
 
 	g.factions = append(g.factions, createFaction("AI 2", 1, false, true))
+	g.factions[1].economy.minerals = 100000
 	g.addPawn(createUnit("tscv", mapW - 10, mapH/2, g.factions[1], true))
 	CHEAT_IGNORE_FOW = false
 }
