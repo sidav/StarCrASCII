@@ -144,8 +144,8 @@ func (p *pawn) doGatherMineralsOrder() {
 			CURRENT_MAP.depleteMineralField(mx, my)
 			log.appendMessage("Mineral field depleted.")
 		}
-		order.orderType = order_return_resources
 	}
+	order.orderType = order_return_resources
 }
 
 func (p *pawn) doReturnResourcesOrder() {
@@ -154,8 +154,8 @@ func (p *pawn) doReturnResourcesOrder() {
 	// TODO: create separate "findNearestResourceReceiver()" function.
 	var closestResourceReceiver *pawn
 	closestRRDist := 999999
-	for _, cc := range CURRENT_MAP.pawns {
-		if cc.res != nil && cc.res.receivesResources {
+	for _, cc := range CURRENT_MAP.pawns { // TODO: optimize this, do not iterate over every pawn every turn. 
+		if cc.res != nil && cc.currentConstructionStatus == nil && cc.res.receivesResources {
 			rx, ry := cc.getCenter()
 			dist := (rx-ux)*(rx-ux) + (ry-uy)*(ry-uy)
 			if dist < closestRRDist {
