@@ -17,9 +17,10 @@ func getFactionRGB(fn int) (uint8, uint8, uint8) {
 type faction struct {
 	cursor                                 *cursor // cursor position
 	economy                                *factionEconomy
+	tech                                   *factionTech
 	factionNumber                          int
 	name                                   string
-	playerControlled, aiControlled         bool // used as a stub for now
+	playerControlled, aiControlled         bool    // used as a stub for now
 	aiData                                 *aiData // for AI-controlled factions
 	seenTiles, tilesInSight, radarCoverage [][] bool
 }
