@@ -29,6 +29,7 @@ func createFaction(name string, n int, playerControlled, aiControlled bool) *fac
 	fctn := &faction{
 		playerControlled: playerControlled, aiControlled: aiControlled, name: name, factionNumber: n,
 		economy: &factionEconomy{minerals: 50, vespene: 0}, cursor: &cursor{},
+		tech: &factionTech{},
 	}
 	if aiControlled {
 		fctn.aiData = ai_createAiData()
@@ -62,6 +63,24 @@ func (f *faction) getResourceReceiverNearCoords(x, y int) *pawn {
 		}
 	}
 	return closestResourceReceiver
+}
+
+func (f *faction) recalculateSupplyAndTech() {
+	f.economy.cursupply = 0
+	f.economy.maxsupply = 0
+	f.tech.techBuildings = f.tech.techBuildings[:0] // clears the array keeping the memory allocated
+
+	for _, p := range CURRENT_MAP.pawns {
+		if p.faction == f {
+			if !p.isUnderConstruction() {
+				f.economy.maxsupply += p.givesSupply
+				if p.isBuilding() {
+					f.tech.addTechBuildingToList(p.codename)
+				}
+			}
+			f.economy.cursupply += p.takesSupply
+		}
+	}
 }
 
 func (f *faction) getFactionColor() int {

@@ -288,20 +288,25 @@ func plr_selectUnitsToConstruct(p *pawn) {
 }
 
 func plr_selectBuidingToConstruct(p *pawn) string {
-	availableBuildingCodes := p.productionInfo.allowedBuildings
+	allAvailableBuildingCodes := &(p.productionInfo.allowedBuildings)
+
+	allowedBuildingCodes := make([]string, 0)
 
 	names := make([]string, 0)
 	descriptions := make([]string, 0)
-	for _, code := range availableBuildingCodes {
-		name, desc := getBuildingNameAndDescription(code)
-		names = append(names, name)
-		descriptions = append(descriptions, desc)
+	for _, code := range *allAvailableBuildingCodes {
+		if p.faction.tech.areRequirementsSatisfiedForCode(code) {
+			allowedBuildingCodes = append(allowedBuildingCodes, code)
+			name, desc := getBuildingNameAndDescription(code)
+			names = append(names, name)
+			descriptions = append(descriptions, desc)
+		}
 	}
 
 	index := cmenu.ShowSidebarSingleChoiceMenu("BUILD:", p.faction.getFactionColor(),
 		SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, SIDEBAR_H-SIDEBAR_FLOOR_2, names, descriptions)
 	if index != -1 {
-		return availableBuildingCodes[index]
+		return allowedBuildingCodes[index]
 	}
 	return ""
 }

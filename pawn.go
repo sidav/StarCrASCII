@@ -64,6 +64,10 @@ func (p *pawn) setOrder(o *order) {
 	}
 }
 
+func (p *pawn) isUnderConstruction() bool {
+	return p.currentConstructionStatus != nil
+}
+
 func (p *pawn) isOccupyingCoords(x, y int) bool {
 	if p.isBuilding() {
 		return geometry.AreCoordsInRect(x, y, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h)

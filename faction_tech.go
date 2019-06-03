@@ -22,11 +22,15 @@ func (ftt *factionTech) addTechBuildingToList(code string) {
 	}
 }
 
-func (f *faction) checkTechBuildings() {
-	f.tech.techBuildings = f.tech.techBuildings[:0] // clears the array keeping the memory allocated
-	for _, u := range CURRENT_MAP.pawns {
-		if u.faction == f && u.isBuilding() && !u.isUnderConstruction() {
-			f.tech.addTechBuildingToList(u.codename)
+func (ftt *factionTech) areRequirementsSatisfiedForCode(code string) bool {
+	reqs := PSI_getRequiredTechBuilding(code)
+	if reqs == nil {
+		return true
+	}
+	for _, req := range *reqs {
+		if !ftt.doesHaveTechBuilding(req) {
+			return false
 		}
 	}
+	return true
 }

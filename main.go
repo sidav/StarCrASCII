@@ -91,12 +91,12 @@ func main() {
 		}
 
 		for _, f := range CURRENT_MAP.factions {
-			f.recalculateSupply(CURRENT_MAP)
+			f.recalculateSupplyAndTech()
 		}
 		doAllProduction(CURRENT_MAP)
 		// CURRENT_MAP.cleanupMinerals()
 		timeForTurn := int(time.Since(startTime) / time.Millisecond)
-		debug_write("Time for turn: " + strconv.Itoa(timeForTurn) + "ms") // TODO: make it removable
+		debug_write("Time for turn: " + strconv.Itoa(timeForTurn) + "ms")
 	}
 
 }

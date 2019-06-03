@@ -12,7 +12,7 @@ func (g *gameMap) init() {
 	initMapForMission(g, 1)
 
 	for _, f := range g.factions {
-		f.recalculateSupply(g)
+		f.recalculateSupplyAndTech()
 	}
 }
 
