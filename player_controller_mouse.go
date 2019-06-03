@@ -104,8 +104,14 @@ func plr_selectPawnWithMouse(f *faction, m *gameMap) *[]*pawn { // returns a poi
 		case "DELETE": // cheat
 			f.economy.minerals += 10000
 			f.economy.vespene += 10000
-		//case "INSERT": // cheat
-		//	CURRENT_MAP.addBuilding(createBuilding("wall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+		case "INSERT": // cheat
+			for _, fac := range CURRENT_MAP.factions {
+				if fac != f {
+					fac.economy.minerals += 500
+					fac.economy.vespene += 500
+				}
+			}
+			log.appendMessage("Added 500 minerals and gas to the enemies.")
 		case "HOME": // cheat
 			// CURRENT_MAP.addBuilding(createBuilding("lturret", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[0]), true)
 			endTurnPeriod = 0
@@ -269,7 +275,6 @@ func plr_giveOrderForMultiSelectWithMouse(selection *[]*pawn, f *faction) {
 			reRenderNeeded = true
 			return
 		}
-
 
 		switch keyPressed {
 		case "ENTER", "RETURN":

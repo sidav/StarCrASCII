@@ -9,6 +9,8 @@ func PSI_getRequiredTechBuilding(code string) *[]string {
 		return &([]string {"tsupply"})
 	case "tautoturret":
 		return &([]string {"tbarracks"})
+	//case "tmarine":
+	//	return &([]string {"tbarracks"})
 	// zerg
 	// protoss
 	default:

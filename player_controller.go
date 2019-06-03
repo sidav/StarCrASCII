@@ -1,9 +1,9 @@
 package main
 
 import (
-	cmenu "github.com/sidav/golibrl/console_menu"
-	cw "github.com/sidav/golibrl/console"
 	"fmt"
+	cw "github.com/sidav/golibrl/console"
+	cmenu "github.com/sidav/golibrl/console_menu"
 	"time"
 )
 
@@ -123,8 +123,14 @@ func plr_selectPawn(f *faction, m *gameMap) *[]*pawn { // returns a pointer to a
 		case "DELETE": // cheat
 			f.economy.minerals += 10000
 			f.economy.vespene += 10000
-		//case "INSERT": // cheat
-		//	CURRENT_MAP.addBuilding(createBuilding("wall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+		case "INSERT": // cheat
+			for _, fac := range CURRENT_MAP.factions {
+				if fac != f {
+					fac.economy.minerals += 500
+					fac.economy.vespene += 500
+				}
+			}
+			log.appendMessage("Added 500 minerals and gas to the enemies.")
 		case "HOME": // cheat
 			// CURRENT_MAP.addBuilding(createBuilding("lturret", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[0]), true)
 			endTurnPeriod = 0
@@ -245,16 +251,21 @@ func plr_selectOrderForMultiSelect(selection *[]*pawn, f *faction) {
 }
 
 func plr_selectUnitsToConstruct(p *pawn) {
-	availableUnitCodes := p.productionInfo.allowedUnits
+	allAvailableUnitCodes := &(p.productionInfo.allowedUnits)
+
+	allowedUnitCodes := make([]string, 0)
 
 	names := make([]string, 0)
 	descriptions := make([]string, 0)
 
 	// descriptions := make([]string, 0)
-	for _, code := range availableUnitCodes {
-		name, desc := getUnitNameAndDescription(code)
-		names = append(names, name)
-		descriptions = append(descriptions, desc)
+	for _, code := range *allAvailableUnitCodes {
+		if p.faction.tech.areRequirementsSatisfiedForCode(code) {
+			allowedUnitCodes = append(allowedUnitCodes, code)
+			name, desc := getUnitNameAndDescription(code)
+			names = append(names, name)
+			descriptions = append(descriptions, desc)
+		}
 	}
 
 	presetValues := make([]int, 0)
@@ -277,7 +288,7 @@ func plr_selectUnitsToConstruct(p *pawn) {
 			p.setOrder(&order{orderType: order_construct})
 			for _, i := range indicesQueue {
 				p.order.constructingQueue = append(p.order.constructingQueue,
-					createUnit(availableUnitCodes[i], p.x, p.y, p.faction, false))
+					createUnit(allowedUnitCodes[i], p.x, p.y, p.faction, false))
 			}
 			log.appendMessagef("Construction of %d units initiated.", len(p.order.constructingQueue))
 		} else {
