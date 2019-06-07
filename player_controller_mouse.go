@@ -304,6 +304,7 @@ func plr_selectBuildingSiteWithMouse(p *pawn, b *pawn, m *gameMap) {
 		click := cw.GetMouseClickedButton()
 		cursor.currentCursorMode = CURSOR_BUILD
 
+		cursor.tightPlacement = b.buildingInfo.allowsTightPlacement
 		if b.buildingInfo.allowsTightPlacement {
 			cursor.w = b.buildingInfo.w
 			cursor.h = b.buildingInfo.h

@@ -330,6 +330,7 @@ func plr_selectBuildingSite(p *pawn, b *pawn, m *gameMap) {
 		cx, cy := cursor.getCoords()
 		cursor.currentCursorMode = CURSOR_BUILD
 
+		cursor.tightPlacement = b.buildingInfo.allowsTightPlacement
 		if b.buildingInfo.allowsTightPlacement {
 			cursor.w = b.buildingInfo.w
 			cursor.h = b.buildingInfo.h

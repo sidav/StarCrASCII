@@ -278,6 +278,21 @@ func renderCircle(fromx, fromy, radius int, char rune, flush bool) {
 	}
 }
 
+func renderApproxCircleAroundRect(fromx, fromy, width, height, radius int, char rune, flush bool) {
+	if radius == 0 {
+		return
+	} else {
+		line := primitives.GetApproxCircleAroundRect(fromx, fromy, width, height, radius)
+		for _, point := range *line {
+			x, y := point.X, point.Y
+			renderCharByGlobalCoords(char, x, y)
+		}
+	}
+	if flush {
+		cw.Flush_console()
+	}
+}
+
 func getTargetingChar(x, y int) rune {
 	if abs(x) > 1 {
 		x /= abs(x)

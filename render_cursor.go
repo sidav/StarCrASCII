@@ -156,7 +156,11 @@ func renderBuildCursor(c *cursor) {
 
 	if c.radius > 0 {
 		cw.SetFgColor(cw.RED)
-		renderCircle(c.x, c.y, c.radius, '.', false)
+		if c.tightPlacement {
+			renderApproxCircleAroundRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h, c.radius, '.', false)
+		} else {
+			renderApproxCircleAroundRect(c.x-(c.w-2)/2, c.y-(c.h-2)/2, c.w, c.h, c.radius, '.', false)
+		}
 	}
 
 	for i := 0; i < c.w; i++ {

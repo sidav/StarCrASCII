@@ -19,6 +19,7 @@ type cursor struct {
 	currentCursorMode                    CURSOR_MODE_ENUM
 	w, h, radius                         int  // Used for certain modes only.
 	buildOnMetalOnly, buildOnThermalOnly bool // for build mode only
+	tightPlacement                       bool // for rendering weapon range circles
 	lastSelectedIdlePawnIndex            int  // for selecting the next idle unit
 }
 
