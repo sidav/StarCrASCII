@@ -120,6 +120,12 @@ func plr_selectPawn(f *faction, m *gameMap) *[]*pawn { // returns a pointer to a
 				return nil
 			}
 
+		case "E": // test
+			CURRENT_MAP.addBuilding(createBuilding("testsmall", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+			log.appendMessage("Test enemy building created.")
+		case "B": // test
+			CURRENT_MAP.addBuilding(createBuilding("testbig", f.cursor.x, f.cursor.y, CURRENT_MAP.factions[1]), true)
+			log.appendMessage("LARGE test enemy building created.")
 		case "DELETE": // cheat
 			f.economy.minerals += 10000
 			f.economy.vespene += 10000

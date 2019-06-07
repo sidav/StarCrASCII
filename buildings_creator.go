@@ -131,6 +131,47 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 				hitscan: &WeaponHitscan{baseDamage: 20},
 			}},
 		}
+	// test and whatever
+	case "testsmall":
+		colors := []int{
+			-1,
+		}
+		app := &buildingAppearance{chars: "#", colors: colors}
+		b = &pawn{name: "Test 1x1 Block", maxHitpoints: 200, regenPeriod: 20, sightRadius: 7,
+			buildingInfo:              &building{w: 1, h: 1, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
+			//weapons: []*pawnWeaponInformation{{attackDelay: 12, attackRadius: 6, attacksLand: true,
+			//	hitscan: &WeaponHitscan{baseDamage: 20},
+			//}},
+		}
+	case "testbig":
+		colors := []int{
+			-1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1,
+		}
+		app := &buildingAppearance{chars: "#########################", colors: colors}
+		b = &pawn{name: "Test 5x5 Block", maxHitpoints: 200, regenPeriod: 20, sightRadius: 7,
+			buildingInfo:              &building{w: 5, h: 5, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
+			//weapons: []*pawnWeaponInformation{{attackDelay: 12, attackRadius: 6, attacksLand: true,
+			//	hitscan: &WeaponHitscan{baseDamage: 20},
+			//}},
+		}
+	default:
+		colors := []int{
+			-1,
+		}
+		app := &buildingAppearance{chars: "?", colors: colors}
+		b = &pawn{name: "Unknown building " + codename, maxHitpoints: 200, regenPeriod: 20, sightRadius: 7,
+			buildingInfo:              &building{w: 1, h: 1, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
+			//weapons: []*pawnWeaponInformation{{attackDelay: 12, attackRadius: 6, attacksLand: true,
+			//	hitscan: &WeaponHitscan{baseDamage: 20},
+			//}},
+		}
 	}
 	if b.maxHitpoints == 0 {
 		b.maxHitpoints = 25
