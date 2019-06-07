@@ -181,8 +181,13 @@ func r_renderAttackRadius(p *pawn) {
 	if len(p.weapons) > 0 {
 		// (p.x, p.y, p.weapons[0].attackRadius, false, CURRENT_FACTION_SEEING_THE_SCREEN.cursor.x-VIEWPORT_W/2, CURRENT_FACTION_SEEING_THE_SCREEN.cursor.y-VIEWPORT_H/2)
 		vx, vy := CURRENT_FACTION_SEEING_THE_SCREEN.cursor.getCameraCoords()
-		px, py := p.getCenter()
-		line := primitives.GetCircle(px, py, p.weapons[0].attackRadius)
+		var line *[]primitives.Point
+		if p.isBuilding() {
+			line = primitives.GetApproxCircleAroundRect(p.x, p.y, p.buildingInfo.w, p.buildingInfo.h, p.weapons[0].attackRadius)
+		} else {
+			px, py := p.getCenter()
+			line = primitives.GetCircle(px, py, p.weapons[0].attackRadius)
+		}
 		for _, point := range *line {
 			x, y := point.X, point.Y
 			cw.SetFgColor(cw.BLACK)
