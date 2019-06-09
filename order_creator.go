@@ -17,11 +17,16 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 			log.appendMessage(p.name + ": attacking")
 			return
 		}
-		if target.isBuilding() && target.currentConstructionStatus.isCompleted() == false {
+		if target.isBuilding() && target.isUnderConstruction() && target.currentConstructionStatus.isCompleted() == false {
 			if p.productionInfo.buildType == buildtype_terran && target.currentConstructionStatus.buildType == buildtype_terran {
 				p.setOrder(&order{orderType: order_build, buildingToConstruct: target})
 				log.appendMessage(p.name + ": builds")
 			}
+			return
+		}
+		if target.canContainPawns() {
+			p.setOrder(&order{orderType: order_enter_container, targetPawn: target})
+			log.appendMessage(p.name + ": moving to container")
 			return
 		}
 	}

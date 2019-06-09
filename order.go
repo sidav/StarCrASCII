@@ -3,14 +3,15 @@ package main
 type ORDER_TYPE_ENUM uint8
 
 const (
-	order_hold             ORDER_TYPE_ENUM = iota
-	order_move             ORDER_TYPE_ENUM = iota
-	order_attack           ORDER_TYPE_ENUM = iota
-	order_attack_move      ORDER_TYPE_ENUM = iota
-	order_build            ORDER_TYPE_ENUM = iota // maybe merge build and repair?
-	order_construct        ORDER_TYPE_ENUM = iota
-	order_gather_minerals  ORDER_TYPE_ENUM = iota
-	order_return_resources ORDER_TYPE_ENUM = iota
+	order_hold ORDER_TYPE_ENUM = iota
+	order_move
+	order_attack
+	order_attack_move
+	order_build  // maybe merge build and repair?
+	order_construct
+	order_gather_minerals
+	order_return_resources
+	order_enter_container
 )
 
 type order struct {

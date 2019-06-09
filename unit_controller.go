@@ -34,6 +34,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doGatherMineralsOrder()
 	case order_return_resources:
 		u.doReturnResourcesOrder()
+	case order_enter_container:
+		u.doEnterContainerOrder()
 	}
 
 	// move
@@ -190,6 +192,30 @@ func (p *pawn) doAttackOrder() { // Only moves the unit to a firing position. Th
 	if !geometry.AreCoordsInRange(ux, uy, targetX, targetY, p.getMaxRadiusToFire()) {
 		order.x = targetX
 		order.y = targetY
+		p.doMoveOrder()
+		return
+	}
+}
+
+func (p *pawn) doEnterContainerOrder() {
+	order := p.order
+	// get contaier pawn
+	cont := order.targetPawn
+	if cont.isInDistanceFromPawn(p, 1) {
+		if cont.hitpoints <= 0 {
+			p.reportOrderCompletion("container destroyed. Now standing by")
+			p.order = nil
+			return
+		}
+		if !cont.isUnderConstruction() {
+			cont.containerInfo.addPawnToContainer(p)
+			CURRENT_MAP.removePawn(p)
+			p.reportOrderCompletion("entered the container")
+			p.order = nil
+			return
+		}
+	} else {
+		order.x, order.y = cont.getCenter()
 		p.doMoveOrder()
 		return
 	}
