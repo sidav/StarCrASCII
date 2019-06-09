@@ -157,7 +157,7 @@ func (p *pawn) doReturnResourcesOrder() {
 		p.nextTickToAct = CURRENT_TICK + 10
 		return
 	} else {
-		if closestResourceReceiver.IsCloseupToCoords(p.x, p.y) { // resources unload
+		if closestResourceReceiver.isInDistanceFromPawn(p, 1) { // resources unload
 			if p.res.mineralsCarry > 0 {
 				p.faction.economy.minerals += p.res.mineralsCarry
 				p.res.mineralsCarry = 0

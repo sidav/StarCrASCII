@@ -74,6 +74,19 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 				},
 			},
 		}
+	// The CORE Initiative
+	case "ccommander":
+		newUnit = &pawn{name: "Core ACU", maxHitpoints: 200, isLight: true, givesSupply: 5,
+			unitInfo:       &unit{appearance: ccell{char: '@'}},
+			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 3, receivesResources: true},
+			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true}, regenPeriod: 25,
+			// currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 15, costM: 100},
+			weapons: []*pawnWeaponInformation{
+				{attackDelay: 10, attackRadius: 3, attacksLand: true,
+					hitscan: &WeaponHitscan{baseDamage:3},
+				},
+			},
+		}
 
 	default:
 		newUnit = &pawn{name: "UNKNOWN UNIT " + codename,
