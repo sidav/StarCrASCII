@@ -222,6 +222,11 @@ func plr_selectOrder(selection *[]*pawn, f *faction, m *gameMap) {
 			if selectedPawn.canConstructUnits() {
 				selectedPawn.repeatConstructionQueue = !selectedPawn.repeatConstructionQueue
 			}
+		case "u": // unload units inside
+			if selectedPawn.canReleaseContainedPawns() {
+				selectedPawn.setOrder(&order{orderType: order_unload})
+				return
+			}
 		case "ESCAPE":
 			return
 		default:

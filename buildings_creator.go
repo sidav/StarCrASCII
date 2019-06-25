@@ -49,6 +49,22 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 100},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"tmarine"}},
 		}
+	case "tbunker":
+		colors := []int{
+			-1, 7, -1,
+			-1, 7, -1,
+		}
+		app := &buildingAppearance{chars: "" +
+			"=%=" +
+			"=%=", colors: colors}
+		b = &pawn{name: "Bunker", maxHitpoints: 300, regenPeriod: 25,
+			buildingInfo:              &building{w: 3, h: 2, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 100},
+			containerInfo:             &pawnContainerInformation{allowFireFromInside: true, maxSize: 4},
+			//weapons: []*pawnWeaponInformation{{attackDelay: 10, attackRadius: 6, attacksLand: true,
+			//	hitscan: &WeaponHitscan{baseDamage: 5, lightMod: 2},
+			//}},
+		}
 	case "tautoturret":
 		colors := []int{
 			-1, 7,

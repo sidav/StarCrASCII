@@ -73,6 +73,9 @@ func main() {
 			for _, u := range CURRENT_MAP.pawns {
 				if u.hitpoints <= 0 {
 					log.appendMessage(u.name + " is destroyed!")
+					if u.canContainPawns() && len(u.containerInfo.pawnsInside) > 0 {
+						u.doUnloadOrder()
+					}
 					CURRENT_MAP.removePawn(u)
 					continue
 				}

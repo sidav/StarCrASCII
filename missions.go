@@ -74,7 +74,10 @@ func initMapForMission(g *gameMap, missionNumber int) {
 	com := createUnit("ccommander", 11, mapH/2+4, g.factions[0], true)
 	com.hitpoints = 1
 	g.addPawn(com)
-
+	g.addPawn(createUnit("tmarine", 8, mapH/2+5, g.factions[0], true))
+	g.addPawn(createUnit("tmarine", 9, mapH/2+5, g.factions[0], true))
+	g.addPawn(createUnit("tmarine", 10, mapH/2+5, g.factions[0], true))
+	g.addPawn(createUnit("tghost", 11, mapH/2+5, g.factions[0], true))
 	g.factions[0].cursor.centralizeCamera()
 
 	g.factions = append(g.factions, createFaction("AI 2", 1, false, true))

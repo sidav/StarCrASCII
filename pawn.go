@@ -19,6 +19,7 @@ type pawn struct {
 	currentConstructionStatus *underConstructionInformation
 	moveInfo                  *pawnMovementInformation
 	weapons                   []*pawnWeaponInformation
+	containerInfo             *pawnContainerInformation
 	takesSupply, givesSupply  int
 	nextTickToAct             int
 	isCommander               bool

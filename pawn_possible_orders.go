@@ -15,3 +15,8 @@ func (p *pawn) canCollectMinerals() bool {
 func (p *pawn) canMove() bool {
 	return p.moveInfo != nil
 }
+
+func (p *pawn) canReleaseContainedPawns() bool {
+	return p.canContainPawns() && len(p.containerInfo.pawnsInside) > 0
+}
+

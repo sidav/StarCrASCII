@@ -11,7 +11,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_terran,
-				allowedBuildings: []string{"tcommand", "tsupply", "tbarracks", "tautoturret"},
+				allowedBuildings: []string{"tcommand", "tsupply", "tbarracks", "tautoturret", "tbunker"},
 			},
 			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 5},
 			weapons: []*pawnWeaponInformation{
@@ -28,6 +28,17 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 5, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:5},
+				},
+			},
+		}
+	case "tghost":
+		newUnit = &pawn{name: "Terran Ghost", maxHitpoints: 40, isLight: true, takesSupply: 1,
+			unitInfo:       &unit{appearance: ccell{char: 'g'}},
+			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true}, regenPeriod: 7,
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 75},
+			weapons: []*pawnWeaponInformation{
+				{attackDelay: 25, attackRadius: 7, attacksLand: true,
+					hitscan: &WeaponHitscan{baseDamage:5, lightMod: 15},
 				},
 			},
 		}
