@@ -277,6 +277,7 @@ func (p *pawn) doUnloadOrder() {
 		for i, curr_unit := range p.containerInfo.pawnsInside {
 			curr_unit.x = p.x + i
 			curr_unit.y = p.y -1
+			curr_unit.order = nil 
 			CURRENT_MAP.addPawn(curr_unit)
 		}
 		p.containerInfo.pawnsInside = nil
