@@ -208,13 +208,18 @@ func (p *pawn) doEnterContainerOrder() {
 			p.order = nil
 			return
 		}
-		if !cont.isUnderConstruction() {
-			cont.containerInfo.addPawnToContainer(p)
-			CURRENT_MAP.removePawn(p)
-			p.reportOrderCompletion("entered the container")
+		if !cont.containerInfo.canAddPawn(p) || cont.isUnderConstruction() {
+			p.reportOrderCompletion("can't enter. Now  standing by")
 			p.order = nil
 			return
 		}
+
+		cont.containerInfo.addPawnToContainer(p)
+		CURRENT_MAP.removePawn(p)
+		p.reportOrderCompletion("entered.")
+		p.order = nil
+		return
+
 	} else {
 		order.x, order.y = cont.getCenter()
 		p.doMoveOrder()
@@ -276,8 +281,8 @@ func (p *pawn) doUnloadOrder() {
 	if len(p.containerInfo.pawnsInside) > 0 {
 		for i, curr_unit := range p.containerInfo.pawnsInside {
 			curr_unit.x = p.x + i
-			curr_unit.y = p.y -1
-			curr_unit.order = nil 
+			curr_unit.y = p.y - 1
+			curr_unit.order = nil
 			CURRENT_MAP.addPawn(curr_unit)
 		}
 		p.containerInfo.pawnsInside = nil

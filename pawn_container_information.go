@@ -13,3 +13,7 @@ func (p *pawn) canContainPawns() bool {
 func (c *pawnContainerInformation) addPawnToContainer(p *pawn) {
 	c.pawnsInside = append(c.pawnsInside, p)
 }
+
+func (c *pawnContainerInformation) canAddPawn(p *pawn) bool { // TODO: count units' individual size
+	return c.maxSize - len(c.pawnsInside) > 0
+}
