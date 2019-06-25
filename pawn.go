@@ -7,23 +7,23 @@ import (
 
 type pawn struct {
 	// pawn is a building or a unit.
-	name                      string
-	codename                  string // for inner usage
-	unitInfo                  *unit
-	buildingInfo              *building
-	faction                   *faction
-	x, y                      int
-	order                     *order
-	res                       *pawnResourceInformation
-	productionInfo            *productionInformation
-	currentConstructionStatus *underConstructionInformation
-	moveInfo                  *pawnMovementInformation
-	weapons                   []*pawnWeaponInformation
-	containerInfo             *pawnContainerInformation
-	takesSupply, givesSupply  int
-	nextTickToAct             int
-	isCommander               bool
-	sightRadius, radarRadius  int
+	name                                       string
+	codename                                   string // for inner usage
+	unitInfo                                   *unit
+	buildingInfo                               *building
+	faction                                    *faction
+	x, y                                       int
+	order                                      *order
+	res                                        *pawnResourceInformation
+	productionInfo                             *productionInformation
+	currentConstructionStatus                  *underConstructionInformation
+	moveInfo                                   *pawnMovementInformation
+	weapons                                    []*pawnWeaponInformation
+	containerInfo                              *pawnContainerInformation
+	takesSupply, givesSupply                   int
+	nextTickToAct                              int
+	isCommander                                bool
+	sightRadius, radarRadius, pylonFieldRadius int
 
 	repeatConstructionQueue bool // for factories
 	// armor info:
