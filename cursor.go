@@ -17,9 +17,8 @@ type cursor struct {
 	xorig, yorig                         int // for bandbox selection
 	snappedPawn                          *pawn
 	currentCursorMode                    CURSOR_MODE_ENUM
-	w, h, radius                         int  // Used for certain modes only.
-	buildOnMetalOnly, buildOnThermalOnly bool // for build mode only
-	tightPlacement                       bool // for rendering weapon range circles
+	w, h, radius                         int // Used for certain modes only.
+	buildingToConstruct                  *pawn
 	lastSelectedIdlePawnIndex            int  // for selecting the next idle unit
 }
 

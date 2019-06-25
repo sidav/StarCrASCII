@@ -201,6 +201,30 @@ func r_renderAttackRadius(p *pawn) {
 	}
 }
 
+func r_renderPylonRadius(p *pawn) {
+	p_rad := PSI_getPylonFieldRadius(p.codename)
+	if p_rad > 0 {
+		vx, vy := CURRENT_FACTION_SEEING_THE_SCREEN.cursor.getCameraCoords()
+		var line *[]primitives.Point
+		if p.isBuilding() {
+			line = primitives.GetApproxCircleAroundRect(p.x, p.y, p.buildingInfo.w, p.buildingInfo.h, p_rad)
+		} else {
+			px, py := p.getCenter()
+			line = primitives.GetCircle(px, py, p_rad)
+		}
+		for _, point := range *line {
+			x, y := point.X, point.Y
+			cw.SetFgColor(cw.BLACK)
+			if geometry.AreCoordsInRect(x-vx, y-vy, 0, 0, VIEWPORT_W, VIEWPORT_H) && areCoordsValid(x, y) {
+				tileApp := CURRENT_MAP.tileMap[x][y].appearance
+				cw.SetBgColor(tileApp.color)
+				cw.PutChar(tileApp.char, x-vx, y-vy)
+			}
+		}
+		cw.SetBgColor(cw.BLACK)
+	}
+}
+
 func renderOrderLine(p *pawn) {
 	var ordr *order
 	if p.order != nil {
