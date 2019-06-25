@@ -237,6 +237,11 @@ func plr_giveOrderWithMouse(selection *[]*pawn, f *faction) {
 				selectedPawn.repeatConstructionQueue = !selectedPawn.repeatConstructionQueue
 				reRenderNeeded = true
 			}
+		case "u": // unload units inside
+			if selectedPawn.canReleaseContainedPawns() {
+				selectedPawn.setOrder(&order{orderType: order_unload})
+				return
+			}
 		case "ESCAPE":
 			return
 		default:

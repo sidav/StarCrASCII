@@ -15,6 +15,10 @@ func pcm_mouseOrderSelectMenu(p *pawn) string {
 		orders = append(orders, "(B)uild")
 		keyEquivalents = append(keyEquivalents, "b")
 	}
+	if p.canReleaseContainedPawns() {
+		orders = append(orders, "(U)nload units")
+		keyEquivalents = append(keyEquivalents, "u")
+	}
 	if p.canConstructUnits() {
 		orders = append(orders, "(C)onstruct units")
 		keyEquivalents = append(keyEquivalents, "c")

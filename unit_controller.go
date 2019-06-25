@@ -35,6 +35,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doReturnResourcesOrder()
 	case order_enter_container:
 		u.doEnterContainerOrder()
+	case order_unload:
+		u.doUnloadOrder()
 	}
 
 	// move
@@ -268,6 +270,18 @@ func (p *pawn) doAttackMoveOrder() {
 	if p.isTimeToAct() {
 		p.doMoveOrder()
 	}
+}
+
+func (p *pawn) doUnloadOrder() {
+	if len(p.containerInfo.pawnsInside) > 0 {
+		for i, curr_unit := range p.containerInfo.pawnsInside {
+			curr_unit.x = p.x + i
+			curr_unit.y = p.y -1
+			CURRENT_MAP.addPawn(curr_unit)
+		}
+		p.containerInfo.pawnsInside = nil
+	}
+	p.order = nil
 }
 
 func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets the spendings. Building itself is in doAllProduction()

@@ -12,6 +12,7 @@ const (
 	order_gather_minerals
 	order_return_resources
 	order_enter_container
+	order_unload
 )
 
 type order struct {
