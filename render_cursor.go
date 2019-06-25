@@ -156,8 +156,8 @@ func renderBuildCursor(c *cursor) {
 	c.buildingToConstruct.x, c.buildingToConstruct.y = c.x-c.w/2, c.y-c.h/2
 
 	// TODO: optimize it with getPawnsInRect()
-	totalVespeneUnderCursor := CURRENT_MAP.getNumberOfVespeneDepositsInRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h)
 	vespeneAmount := CURRENT_MAP.getVespeneAtCoordinates(c.x, c.y)
+	buildOnVespeneOnly := c.buildingToConstruct.buildingInfo.canBeBuiltOnVespeneOnly
 
 	if c.radius > 0 {
 		cw.SetFgColor(cw.RED)
@@ -171,12 +171,11 @@ func renderBuildCursor(c *cursor) {
 	for i := 0; i < c.w; i++ {
 		for j := 0; j < c.h; j++ {
 			if c.buildingToConstruct.buildingInfo.canBeBuiltInPylonFieldOnly &&
-				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) ||
-				c.buildingToConstruct.buildingInfo.canBeBuiltOnVespeneOnly && totalVespeneUnderCursor < c.w * c.h {
+				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) {
 				cw.SetBgColor(cw.RED)
 			} else {
-				if areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable &&
-					CURRENT_MAP.getPawnAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) == nil {
+				if areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.getPawnAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) == nil &&
+					(CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable && !buildOnVespeneOnly || buildOnVespeneOnly && CURRENT_MAP.getVespeneAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) > 0) {
 					cw.SetBgColor(cw.GREEN)
 				} else {
 					cw.SetBgColor(cw.RED)

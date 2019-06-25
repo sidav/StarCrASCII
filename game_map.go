@@ -170,7 +170,7 @@ func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
 	if b.buildingInfo.canBeBuiltInPylonFieldOnly && !g.isPawnInPylonFieldOfFaction(b, b.faction) {
 		return false
 	}
-	if b.buildingInfo.canBeBuiltOnVespeneOnly && g.getNumberOfVespeneDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) == 0 {
+	if b.buildingInfo.canBeBuiltOnVespeneOnly && g.getNumberOfVespeneDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) < b.buildingInfo.w * b.buildingInfo.h {
 		return false
 	}
 	for x := bx; x < bx+b.buildingInfo.w; x++ {
