@@ -53,6 +53,9 @@ func renderInfoOnCursor(f *faction, g *gameMap) {
 		color = sp.faction.getFactionColor()
 		if CURRENT_FACTION_SEEING_THE_SCREEN.areCoordsInSight(sp.x, sp.y) {
 			title = sp.name
+			if sp.isDisabled {
+				title += " (unpowered)"
+			}
 			if sp.faction != f {
 				if sp.isBuilding() {
 					details = append(details, "(Enemy building)")

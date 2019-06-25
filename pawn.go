@@ -22,6 +22,7 @@ type pawn struct {
 	containerInfo             *pawnContainerInformation
 	takesSupply, givesSupply  int
 	nextTickToAct             int
+	isDisabled                bool // when out of the pylon field
 	isCommander               bool
 	sightRadius, radarRadius  int
 
