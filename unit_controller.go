@@ -331,10 +331,6 @@ func (p *pawn) doConstructOrder(m *gameMap) {
 		p.order = nil
 		return
 	}
-	//
-	//uCnst := order.constructingQueue[0]
-	//
-	//p.res.metalSpending = p.productionInfo.builderCoeff * uCnst.currentConstructionStatus.costM / uCnst.currentConstructionStatus.maxConstructionAmount
 }
 
 func (u *pawn) reportOrderCompletion(verb string) {

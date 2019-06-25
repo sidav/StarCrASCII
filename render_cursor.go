@@ -52,8 +52,12 @@ func renderSelectCursor(f *faction) {
 	globx, globy := c.getCoords()
 	resInfoString := ""
 	mineralsUnderCursor := CURRENT_MAP.getMineralsAtCoordinates(globx, globy)
+	vespeneUnderCursor := CURRENT_MAP.getVespeneAtCoordinates(globx, globy)
 	if mineralsUnderCursor > 0 {
 		resInfoString = fmt.Sprintf(" %dx minerals ", mineralsUnderCursor)
+	}
+	if vespeneUnderCursor > 0 {
+		resInfoString = fmt.Sprintf(" %dx vespene ", vespeneUnderCursor)
 	}
 	//if totalThermalUnderCursor > 0 {
 	//	resInfoString += fmt.Sprintf(" %dx THERMAL ", totalThermalUnderCursor)
@@ -152,8 +156,8 @@ func renderBuildCursor(c *cursor) {
 	c.buildingToConstruct.x, c.buildingToConstruct.y = c.x-c.w/2, c.y-c.h/2
 
 	// TODO: optimize it with getPawnsInRect()
-	totalMetalUnderCursor := CURRENT_MAP.getNumberOfMetalDepositsInRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h)
-	totalThermalUnderCursor := CURRENT_MAP.getNumberOfThermalDepositsInRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h)
+	totalVespeneUnderCursor := CURRENT_MAP.getNumberOfVespeneDepositsInRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h)
+	vespeneAmount := CURRENT_MAP.getVespeneAtCoordinates(c.x, c.y)
 
 	if c.radius > 0 {
 		cw.SetFgColor(cw.RED)
@@ -167,7 +171,8 @@ func renderBuildCursor(c *cursor) {
 	for i := 0; i < c.w; i++ {
 		for j := 0; j < c.h; j++ {
 			if c.buildingToConstruct.buildingInfo.canBeBuiltInPylonFieldOnly &&
-				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) {
+				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) ||
+				c.buildingToConstruct.buildingInfo.canBeBuiltOnVespeneOnly && totalVespeneUnderCursor < c.w * c.h {
 				cw.SetBgColor(cw.RED)
 			} else {
 				if areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable &&
@@ -181,11 +186,8 @@ func renderBuildCursor(c *cursor) {
 		}
 	}
 	resInfoString := ""
-	if totalMetalUnderCursor > 0 {
-		resInfoString += fmt.Sprintf(" %dx METAL ", totalMetalUnderCursor)
-	}
-	if totalThermalUnderCursor > 0 {
-		resInfoString += fmt.Sprintf(" %dx THERMAL ", totalThermalUnderCursor)
+	if vespeneAmount > 0 {
+		resInfoString += fmt.Sprintf(" %dx VESPENE ", vespeneAmount)
 	}
 	if len(resInfoString) > 0 {
 		cw.SetBgColor(cw.DARK_GRAY)

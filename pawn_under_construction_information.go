@@ -18,5 +18,5 @@ func (ci *underConstructionInformation) getCompletionPercent() int {
 }
 
 func (ci *underConstructionInformation) getDescriptionString() string {
-	return fmt.Sprintf("Metal: %d ENERGY: %d Base build time: %d", ci.costM, 50, ci.maxConstructionAmount)
+	return fmt.Sprintf("Minerals: %d Vespene: %d Base build time: %d", ci.costM, ci.costV, ci.maxConstructionAmount)
 }
