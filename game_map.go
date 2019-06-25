@@ -138,6 +138,17 @@ func (g *gameMap) getNumberOfThermalDepositsUnderBuilding(b *pawn) int {
 	return g.getNumberOfThermalDepositsInRect(b.x, b.y, b.buildingInfo.w, b.buildingInfo.h)
 }
 
+func (g *gameMap) isPawnInPylonFieldOfFaction(p *pawn, f *faction) bool {
+	for _, b := range g.pawns {
+		if b.faction == f && PSI_getPylonFieldRadius(b.codename) > 0 {
+			if b.isInDistanceFromPawn(p, PSI_getPylonFieldRadius(b.codename)) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tight bool) bool {
 	for _, p := range g.pawns {
 		if p.isBuilding() {
@@ -163,10 +174,12 @@ func (g *gameMap) isConstructionSiteBlockedByUnitOrBuilding(x, y, w, h int, tigh
 func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
 	bx := cx - b.buildingInfo.w/2
 	by := cy - b.buildingInfo.h/2
+	b.x = bx
+	b.y = by
 	if bx < 0 || by < 0 || bx+b.buildingInfo.w >= mapW || by+b.buildingInfo.h >= mapH {
 		return false
 	}
-	if b.buildingInfo.canBeBuiltOnMetalOnly && g.getNumberOfMetalDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) == 0 {
+	if b.buildingInfo.canBeBuiltInPylonFieldOnly && !g.isPawnInPylonFieldOfFaction(b, b.faction) {
 		return false
 	}
 	if b.buildingInfo.canBeBuiltOnThermalOnly && g.getNumberOfThermalDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) == 0 {

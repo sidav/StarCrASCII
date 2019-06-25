@@ -117,6 +117,17 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pprobe"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
 		}
+	case "ppylon":
+		colors := []int{
+			-1, -1,
+			-1, -1}
+		app := &buildingAppearance{chars: "" +
+			"/\\" +
+			"\\/" , colors: colors}
+		b = &pawn{name: "Pylon", maxHitpoints: 200, givesSupply: 8,
+			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 40, costM: 100},
+		}
 	case "pgateway":
 		colors := []int{
 			-1, 7, -1,
@@ -128,7 +139,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			">*<" +
 			"#|#", colors: colors}
 		b = &pawn{name: "Gateway", maxHitpoints: 500,
-			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: false},
+			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: false, canBeBuiltInPylonFieldOnly: true},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"pzealot"}},
 		}
@@ -141,7 +152,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"P\\" +
 			"\\P", colors: colors}
 		b = &pawn{name: "Photon Cannon", maxHitpoints: 200, regenPeriod: 20, sightRadius: 7,
-			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
+			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true, canBeBuiltInPylonFieldOnly: true},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 150},
 			weapons: []*pawnWeaponInformation{{attackDelay: 12, attackRadius: 6, attacksLand: true,
 				hitscan: &WeaponHitscan{baseDamage: 20},

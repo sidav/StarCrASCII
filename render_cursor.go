@@ -149,6 +149,7 @@ func renderAttackMoveCursor(f *faction) {
 
 func renderBuildCursor(c *cursor) {
 	x, y := c.getOnScreenCoords()
+	c.buildingToConstruct.x, c.buildingToConstruct.y = c.x-c.w/2, c.y-c.h/2
 
 	// TODO: optimize it with getPawnsInRect()
 	totalMetalUnderCursor := CURRENT_MAP.getNumberOfMetalDepositsInRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h)
@@ -156,7 +157,7 @@ func renderBuildCursor(c *cursor) {
 
 	if c.radius > 0 {
 		cw.SetFgColor(cw.RED)
-		if c.tightPlacement {
+		if c.buildingToConstruct.buildingInfo.allowsTightPlacement {
 			renderApproxCircleAroundRect(c.x-c.w/2, c.y-c.h/2, c.w, c.h, c.radius, '.', false)
 		} else {
 			renderApproxCircleAroundRect(c.x-(c.w-2)/2, c.y-(c.h-2)/2, c.w, c.h, c.radius, '.', false)
@@ -165,8 +166,8 @@ func renderBuildCursor(c *cursor) {
 
 	for i := 0; i < c.w; i++ {
 		for j := 0; j < c.h; j++ {
-			if (c.buildOnMetalOnly && totalMetalUnderCursor == 0) ||
-				(c.buildOnThermalOnly && totalThermalUnderCursor == 0) {
+			if c.buildingToConstruct.buildingInfo.canBeBuiltInPylonFieldOnly &&
+				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) {
 				cw.SetBgColor(cw.RED)
 			} else {
 				if areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable &&

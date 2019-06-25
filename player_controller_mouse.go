@@ -315,7 +315,7 @@ func plr_selectBuildingSiteWithMouse(p *pawn, b *pawn, m *gameMap) {
 		click := cw.GetMouseClickedButton()
 		cursor.currentCursorMode = CURSOR_BUILD
 
-		cursor.tightPlacement = b.buildingInfo.allowsTightPlacement
+		cursor.buildingToConstruct = b
 		if b.buildingInfo.allowsTightPlacement {
 			cursor.w = b.buildingInfo.w
 			cursor.h = b.buildingInfo.h
@@ -324,8 +324,6 @@ func plr_selectBuildingSiteWithMouse(p *pawn, b *pawn, m *gameMap) {
 			cursor.h = b.buildingInfo.h + 2
 		}
 
-		cursor.buildOnMetalOnly = b.buildingInfo.canBeBuiltOnMetalOnly
-		cursor.buildOnThermalOnly = b.buildingInfo.canBeBuiltOnThermalOnly
 		cursor.radius = b.getMaxRadiusToFire()
 
 		if reRenderNeeded { // TODO: move all that "if reRenderNeeded" to the renderer itself to keep code more clean.

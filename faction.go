@@ -72,6 +72,10 @@ func (f *faction) recalculateSupplyAndTech() {
 
 	for _, p := range CURRENT_MAP.pawns {
 		if p.faction == f {
+			if p.isBuilding() && p.buildingInfo.canBeBuiltInPylonFieldOnly {
+				p.isDisabled = !CURRENT_MAP.isPawnInPylonFieldOfFaction(p, f)
+				p.order = nil
+			}
 			if !p.isUnderConstruction() {
 				f.economy.maxsupply += p.givesSupply
 				if p.isBuilding() {

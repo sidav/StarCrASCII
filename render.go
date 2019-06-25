@@ -41,7 +41,8 @@ func r_renderScreenForFaction(f *faction, g *gameMap, selection *[]*pawn, flush 
 	renderFactionStats(f)
 	renderInfoOnCursor(f, g)
 	r_renderUIOutline(f)
-	renderPawnsInViewport(f, g)
+	render_pylon_ranges := f.cursor.currentCursorMode == CURSOR_BUILD && f.cursor.buildingToConstruct.buildingInfo.canBeBuiltInPylonFieldOnly
+	renderPawnsInViewport(f, g, render_pylon_ranges)
 	if selection != nil && len(*selection) != 0 {
 		r_renderSelectedPawns(f, selection)
 		if len(*selection) == 1 {
@@ -106,7 +107,7 @@ func renderMapInViewport(f *faction, g *gameMap) {
 	}
 }
 
-func renderPawnsInViewport(f *faction, g *gameMap) {
+func renderPawnsInViewport(f *faction, g *gameMap, render_pylon_ranges bool) {
 	vx, vy := f.cursor.getCameraCoords()
 	for _, p := range g.pawns {
 		cx, cy := p.getCenter()
@@ -115,7 +116,7 @@ func renderPawnsInViewport(f *faction, g *gameMap) {
 			renderCharByGlobalCoords('?', cx, cy)
 		}
 		if p.isBuilding() {
-			renderBuilding(f, p, g, vx, vy, false)
+			renderBuilding(f, p, g, vx, vy, false, render_pylon_ranges)
 		} else {
 			renderUnit(f, p, g, vx, vy, false)
 		}
@@ -128,7 +129,7 @@ func r_renderSelectedPawns(f *faction, selection *[]*pawn) {
 		if p.isUnit() {
 			renderUnit(f, p, CURRENT_MAP, vx, vy, true)
 		} else if p.isBuilding() {
-			renderBuilding(f, p, CURRENT_MAP, vx, vy, true)
+			renderBuilding(f, p, CURRENT_MAP, vx, vy, true, true)
 		}
 	}
 }
@@ -151,7 +152,7 @@ func renderUnit(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 	}
 }
 
-func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
+func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse, renderPylonRadius bool) {
 	b := p.buildingInfo
 	app := b.appearance
 	bx, by := p.getCoords()
@@ -183,6 +184,9 @@ func renderBuilding(f *faction, p *pawn, g *gameMap, vx, vy int, inverse bool) {
 				cw.PutChar(int32(app.chars[x+b.w*y]), bx+x-vx, by+y-vy)
 			}
 		}
+	}
+	if renderPylonRadius && p.faction == f {
+		r_renderPylonRadius(p)
 	}
 	cw.SetBgColor(cw.BLACK)
 }

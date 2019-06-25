@@ -9,7 +9,7 @@ func (p *pawn) isTimeToAct() bool {
 }
 
 func (u *pawn) executeOrders(m *gameMap) {
-	if !u.isTimeToAct() {
+	if !u.isTimeToAct() || u.isDisabled {
 		return
 	}
 
@@ -230,7 +230,8 @@ func (p *pawn) doEnterContainerOrder() {
 func (attacker *pawn) openFireIfPossible() { // does the firing, does NOT necessary mean execution of attack order (but can be)
 	if attacker.currentConstructionStatus != nil ||
 		attacker.order != nil && attacker.order.orderType == order_build ||
-		!attacker.hasWeapons() && !(attacker.canContainPawns() && attacker.containerInfo.allowFireFromInside) {
+		!attacker.hasWeapons() && !(attacker.canContainPawns() && attacker.containerInfo.allowFireFromInside) ||
+		attacker.isDisabled {
 		return
 	}
 	var pawnInOrder *pawn

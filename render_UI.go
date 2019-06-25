@@ -53,6 +53,9 @@ func renderInfoOnCursor(f *faction, g *gameMap) {
 		color = sp.faction.getFactionColor()
 		if CURRENT_FACTION_SEEING_THE_SCREEN.areCoordsInSight(sp.x, sp.y) {
 			title = sp.name
+			if sp.isDisabled {
+				title += " (unpowered)"
+			}
 			if sp.faction != f {
 				if sp.isBuilding() {
 					details = append(details, "(Enemy building)")
@@ -187,6 +190,30 @@ func r_renderAttackRadius(p *pawn) {
 		} else {
 			px, py := p.getCenter()
 			line = primitives.GetCircle(px, py, p.weapons[0].attackRadius)
+		}
+		for _, point := range *line {
+			x, y := point.X, point.Y
+			cw.SetFgColor(cw.BLACK)
+			if geometry.AreCoordsInRect(x-vx, y-vy, 0, 0, VIEWPORT_W, VIEWPORT_H) && areCoordsValid(x, y) {
+				tileApp := CURRENT_MAP.tileMap[x][y].appearance
+				cw.SetBgColor(tileApp.color)
+				cw.PutChar(tileApp.char, x-vx, y-vy)
+			}
+		}
+		cw.SetBgColor(cw.BLACK)
+	}
+}
+
+func r_renderPylonRadius(p *pawn) {
+	p_rad := PSI_getPylonFieldRadius(p.codename)
+	if p_rad > 0 {
+		vx, vy := CURRENT_FACTION_SEEING_THE_SCREEN.cursor.getCameraCoords()
+		var line *[]primitives.Point
+		if p.isBuilding() {
+			line = primitives.GetApproxCircleAroundRect(p.x, p.y, p.buildingInfo.w, p.buildingInfo.h, p_rad)
+		} else {
+			px, py := p.getCenter()
+			line = primitives.GetCircle(px, py, p_rad)
 		}
 		for _, point := range *line {
 			x, y := point.X, point.Y

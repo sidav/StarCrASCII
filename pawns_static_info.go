@@ -17,3 +17,14 @@ func PSI_getRequiredTechBuilding(code string) *[]string {
 		return nil
 	}
 }
+
+func PSI_getPylonFieldRadius(code string) int {
+	switch code {
+	// terran
+	case "ppylon":
+		return 5
+	default:
+		return 0
+	}
+}
+
