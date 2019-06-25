@@ -219,3 +219,13 @@ func (g *gameMap) depleteMineralField(x, y int) {
 		currTile.appearance.char = '.'
 	}
 }
+
+func (g *gameMap) decreaseVespeneUnderMine(mine *pawn, amount int) {
+	if mine.res != nil && mine.res.providesVespene {
+		for x:=mine.x; x<mine.buildingInfo.w+mine.x; x++ {
+			for y:=mine.y; y<mine.buildingInfo.h+mine.y; y++ {
+				g.tileMap[x][y].vespeneAmount -= amount
+			}
+		}
+	}
+}

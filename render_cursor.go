@@ -171,11 +171,12 @@ func renderBuildCursor(c *cursor) {
 	for i := 0; i < c.w; i++ {
 		for j := 0; j < c.h; j++ {
 			if c.buildingToConstruct.buildingInfo.canBeBuiltInPylonFieldOnly &&
-				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) {
+				!CURRENT_MAP.isPawnInPylonFieldOfFaction(c.buildingToConstruct, CURRENT_FACTION_SEEING_THE_SCREEN) ||
+				buildOnVespeneOnly && areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.getVespeneAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) <= 0 {
 				cw.SetBgColor(cw.RED)
 			} else {
 				if areCoordsValid(c.x+i-c.w/2, c.y+j-c.h/2) && CURRENT_MAP.getPawnAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) == nil &&
-					(CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable && !buildOnVespeneOnly || buildOnVespeneOnly && CURRENT_MAP.getVespeneAtCoordinates(c.x+i-c.w/2, c.y+j-c.h/2) > 0) {
+					CURRENT_MAP.tileMap[c.x+i-c.w/2][c.y+j-c.h/2].isPassable {
 					cw.SetBgColor(cw.GREEN)
 				} else {
 					cw.SetBgColor(cw.RED)

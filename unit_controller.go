@@ -31,6 +31,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doConstructOrder(m)
 	case order_gather_minerals:
 		u.doGatherMineralsOrder()
+	case order_gather_vespene:
+		u.doGatherVespeneOrder()
 	case order_return_resources:
 		u.doReturnResourcesOrder()
 	case order_enter_container:
@@ -151,6 +153,47 @@ func (p *pawn) doGatherMineralsOrder() {
 	order.orderType = order_return_resources
 }
 
+func (p *pawn) doGatherVespeneOrder() {
+	order := p.order
+
+	// ux, uy := p.getCoords()
+
+	if p.res == nil {
+		log.warning("Unit " + p.name + " is trying to gather vespene! Whaaaat the heeeeck?")
+		p.order.orderType = order_move
+		return
+	}
+	gasMine := order.targetPawn
+	mx, my := gasMine.getCenter()
+	if p.res.vespeneCarry == 0 {
+		gas := CURRENT_MAP.getVespeneAtCoordinates(mx, my)
+		if !p.isInDistanceFromPawn(gasMine, 1) {
+			order.x, order.y = mx, my
+			pathSuccess := p.doMoveOrder()
+			if !pathSuccess {
+				// TODO: What?
+			}
+			return
+		}
+		if gasMine.isTimeToAct() {
+			if gas > p.res.maxVespeneCarry {
+				CURRENT_MAP.decreaseVespeneUnderMine(gasMine, p.res.maxVespeneCarry)
+				p.res.vespeneCarry = p.res.maxVespeneCarry
+				p.nextTickToAct = CURRENT_TICK + p.res.ticksToMineMineral*p.res.maxVespeneCarry
+			} else {
+				CURRENT_MAP.tileMap[mx][my].vespeneAmount = 1 // never deplete the vespene completely
+				p.res.vespeneCarry = gas
+				p.nextTickToAct = CURRENT_TICK + gas*p.res.maxVespeneCarry
+				CURRENT_MAP.depleteMineralField(mx, my)
+				log.appendMessage("Mineral field depleted.")
+			}
+			gasMine.nextTickToAct = CURRENT_TICK + 30
+			order.orderType = order_return_resources
+		}
+	}
+	p.nextTickToAct = CURRENT_TICK + 5
+}
+
 func (p *pawn) doReturnResourcesOrder() {
 	order := p.order
 	ux, uy := p.getCoords()
@@ -171,7 +214,7 @@ func (p *pawn) doReturnResourcesOrder() {
 				p.faction.economy.vespene += p.res.vespeneCarry
 				p.res.vespeneCarry = 0
 				p.nextTickToAct = CURRENT_TICK + 10
-				// order.orderType = order_gather_minerals // TODO: order_gather_vespene
+				order.orderType = order_gather_vespene
 			}
 		}
 		order.x, order.y = closestResourceReceiver.getCenter()
