@@ -31,6 +31,17 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 				},
 			},
 		}
+	case "tghost":
+		newUnit = &pawn{name: "Terran Ghost", maxHitpoints: 40, isLight: true, takesSupply: 1,
+			unitInfo:       &unit{appearance: ccell{char: 'g'}},
+			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true}, regenPeriod: 7,
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 75},
+			weapons: []*pawnWeaponInformation{
+				{attackDelay: 25, attackRadius: 7, attacksLand: true,
+					hitscan: &WeaponHitscan{baseDamage:5, lightMod: 15},
+				},
+			},
+		}
 	// zergs
 	case "zdrone":
 		newUnit = &pawn{name: "Zerg Drone", maxHitpoints: 50, takesSupply: 1,

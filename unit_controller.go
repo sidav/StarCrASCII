@@ -1,7 +1,6 @@
 package main
 
 import (
-	cw "github.com/sidav/golibrl/console"
 	"github.com/sidav/golibrl/geometry"
 )
 
@@ -222,50 +221,42 @@ func (p *pawn) doEnterContainerOrder() {
 }
 
 func (attacker *pawn) openFireIfPossible() { // does the firing, does NOT necessary mean execution of attack order (but can be)
-	if attacker.currentConstructionStatus != nil || !attacker.hasWeapons() || attacker.order != nil && attacker.order.orderType == order_build {
+	if attacker.currentConstructionStatus != nil ||
+		attacker.order != nil && attacker.order.orderType == order_build ||
+		!attacker.hasWeapons() && !(attacker.canContainPawns() && attacker.containerInfo.allowFireFromInside) {
 		return
 	}
 	var pawnInOrder *pawn
 	if attacker.order != nil && attacker.order.targetPawn != nil {
 		pawnInOrder = attacker.order.targetPawn
 	}
-	attackerCenterX, attackerCenterY := attacker.getCenter()
+
 	for _, wpn := range attacker.weapons {
-		//if attacker.faction.economy.currentEnergy < wpn.attackEnergyCost {
-		//	continue
-		//}
-		if (wpn.canBeFiredOnMove && wpn.nextTurnToFire > CURRENT_TICK) || (!wpn.canBeFiredOnMove && !attacker.isTimeToAct()) {
-			// log.appendMessage(fmt.Sprintf("Skipping fire: TtA:%b CBFoM:%b TRN: %b", attacker.isTimeToAct() ,wpn.canBeFiredOnMove, wpn.nextTurnToFire > CURRENT_TICK))
-			continue
-		}
-		var target *pawn
-		radius := wpn.attackRadius
-		if pawnInOrder != nil && attacker.isInDistanceFromPawn(pawnInOrder, radius) {
-			target = pawnInOrder
-		} else {
-			potential_targets := CURRENT_MAP.getEnemyPawnsInRadiusFromPawn(attacker, radius, attacker.faction)
-			for _, potentialTarget := range potential_targets {
-				ptx, pty := potentialTarget.getCoords()
-				if attacker.faction.areCoordsInSight(ptx, pty) || attacker.faction.areCoordsInRadarRadius(ptx, pty) {
-					target = potentialTarget
-				}
-			}
-		}
-		if target != nil {
+		fired := attackWithWeapon(wpn, attacker, pawnInOrder)
+		if fired {
 			if wpn.canBeFiredOnMove {
 				wpn.nextTurnToFire = CURRENT_TICK + wpn.attackDelay
 			} else {
 				attacker.nextTickToAct = CURRENT_TICK + wpn.attackDelay
 			}
-			// draw the pew pew laser TODO: move this crap somewhere already
-			if areGlobalCoordsOnScreenForFaction(attackerCenterX, attackerCenterY, CURRENT_FACTION_SEEING_THE_SCREEN) || areGlobalCoordsOnScreenForFaction(target.x, target.y, CURRENT_FACTION_SEEING_THE_SCREEN) {
-				cw.SetFgColor(cw.RED)
-				cx, cy := target.getCenter()
-				camx, camy := CURRENT_FACTION_SEEING_THE_SCREEN.cursor.getCameraCoords()
-				renderLine(attackerCenterX, attackerCenterY, cx, cy, false, camx, camy)
-				FIRE_WAS_OPENED_ON_SCREEN_THIS_TURN = true
+		}
+	}
+
+	// attack from inside of a bunker
+	if attacker.canContainPawns() && attacker.containerInfo.allowFireFromInside {
+		for _, unitInside := range attacker.containerInfo.pawnsInside {
+			if unitInside.isTimeToAct() {
+				for _, wpn := range unitInside.weapons {
+					fired := attackWithWeapon(wpn, attacker, pawnInOrder)
+					if fired {
+						if wpn.canBeFiredOnMove {
+							wpn.nextTurnToFire = CURRENT_TICK + wpn.attackDelay
+						} else {
+							unitInside.nextTickToAct = CURRENT_TICK + wpn.attackDelay
+						}
+					}
+				}
 			}
-			dealDamageToTarget(attacker, wpn, target)
 		}
 	}
 }

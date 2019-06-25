@@ -57,7 +57,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 		app := &buildingAppearance{chars: "" +
 			"=%=" +
 			"=%=", colors: colors}
-		b = &pawn{name: "Bunker", maxHitpoints: 300,
+		b = &pawn{name: "Bunker", maxHitpoints: 300, regenPeriod: 25,
 			buildingInfo:              &building{w: 3, h: 2, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 60, costM: 100},
 			containerInfo:             &pawnContainerInformation{allowFireFromInside: true, maxSize: 4},
