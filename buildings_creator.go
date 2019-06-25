@@ -124,7 +124,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 		app := &buildingAppearance{chars: "" +
 			"/\\" +
 			"\\/" , colors: colors}
-		b = &pawn{name: "Pylon", maxHitpoints: 200, givesSupply: 8, pylonFieldRadius: 6,
+		b = &pawn{name: "Pylon", maxHitpoints: 200, givesSupply: 8,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 40, costM: 100},
 		}

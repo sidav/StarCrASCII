@@ -140,8 +140,8 @@ func (g *gameMap) getNumberOfThermalDepositsUnderBuilding(b *pawn) int {
 
 func (g *gameMap) isPawnInPylonFieldOfFaction(p *pawn, f *faction) bool {
 	for _, b := range g.pawns {
-		if b.faction == f && b.pylonFieldRadius > 0 {
-			if b.isInDistanceFromPawn(p, b.pylonFieldRadius) {
+		if b.faction == f && PSI_getPylonFieldRadius(b.codename) > 0 {
+			if b.isInDistanceFromPawn(p, PSI_getPylonFieldRadius(b.codename)) {
 				return true
 			}
 		}
