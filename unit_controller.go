@@ -31,6 +31,8 @@ func (u *pawn) executeOrders(m *gameMap) {
 		u.doConstructOrder(m)
 	case order_gather_minerals:
 		u.doGatherMineralsOrder()
+	case order_gather_vespene:
+		u.doGatherVespeneOrder()
 	case order_return_resources:
 		u.doReturnResourcesOrder()
 	case order_enter_container:
@@ -151,6 +153,51 @@ func (p *pawn) doGatherMineralsOrder() {
 	order.orderType = order_return_resources
 }
 
+func (p *pawn) doGatherVespeneOrder() {
+	order := p.order
+
+	// ux, uy := p.getCoords()
+
+	if p.res == nil {
+		log.warning("Unit " + p.name + " is trying to gather vespene! Whaaaat the heeeeck?")
+		p.order.orderType = order_move
+		return
+	}
+	workerX, workerY := p.getCoords()
+	gasMine := order.targetPawn
+	mx, my := gasMine.getCenter()
+	if p.res.vespeneCarry == 0 {
+		gas := CURRENT_MAP.getVespeneAtCoordinates(mx, my)
+		if !gasMine.IsCloseupToCoords(workerX, workerY) {
+			rx, ry := gasMine.getCoords()
+			w, h := gasMine.buildingInfo.w, gasMine.buildingInfo.h
+			order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, workerX, workerY)
+			pathSuccess := p.doMoveOrder()
+			if !pathSuccess {
+				order.x, order.y = mx, my
+				p.doMoveOrder()
+			}
+			return
+		}
+		if gasMine.isTimeToAct() {
+			if gas > p.res.maxVespeneCarry {
+				CURRENT_MAP.decreaseVespeneUnderMine(gasMine, p.res.maxVespeneCarry)
+				p.res.vespeneCarry = p.res.maxVespeneCarry
+				p.nextTickToAct = CURRENT_TICK + p.res.ticksToMineMineral*p.res.maxVespeneCarry
+			} else {
+				CURRENT_MAP.tileMap[mx][my].vespeneAmount = 1 // never deplete the vespene completely
+				p.res.vespeneCarry = gas
+				p.nextTickToAct = CURRENT_TICK + gas*p.res.maxVespeneCarry
+				CURRENT_MAP.depleteMineralField(mx, my)
+				log.appendMessage("Mineral field depleted.")
+			}
+			gasMine.nextTickToAct = CURRENT_TICK + 30
+			order.orderType = order_return_resources
+		}
+	}
+	p.nextTickToAct = CURRENT_TICK + 5
+}
+
 func (p *pawn) doReturnResourcesOrder() {
 	order := p.order
 	ux, uy := p.getCoords()
@@ -160,22 +207,31 @@ func (p *pawn) doReturnResourcesOrder() {
 		p.nextTickToAct = CURRENT_TICK + 10
 		return
 	} else {
-		if closestResourceReceiver.isInDistanceFromPawn(p, 1) { // resources unload
+		if closestResourceReceiver.IsCloseupToCoords(ux, uy) { // resources unload
 			if p.res.mineralsCarry > 0 {
 				p.faction.economy.minerals += p.res.mineralsCarry
 				p.res.mineralsCarry = 0
-				p.nextTickToAct = CURRENT_TICK + 10
+				p.nextTickToAct = CURRENT_TICK + 25
 				order.orderType = order_gather_minerals
 			}
 			if p.res.vespeneCarry > 0 {
 				p.faction.economy.vespene += p.res.vespeneCarry
 				p.res.vespeneCarry = 0
-				p.nextTickToAct = CURRENT_TICK + 10
-				// order.orderType = order_gather_minerals // TODO: order_gather_vespene
+				p.nextTickToAct = CURRENT_TICK + 25
+				order.orderType = order_gather_vespene
 			}
 		}
-		order.x, order.y = closestResourceReceiver.getCenter()
-		p.doMoveOrder()
+		rx, ry := closestResourceReceiver.getCoords()
+		w, h := 1, 1
+		if closestResourceReceiver.isBuilding() {
+			w, h = closestResourceReceiver.buildingInfo.w, closestResourceReceiver.buildingInfo.h 
+		}
+		order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, ux, uy)
+		pathSuccess := p.doMoveOrder()
+		if !pathSuccess {
+			order.x, order.y = closestResourceReceiver.getCenter()
+			p.doMoveOrder()
+		}
 	}
 }
 
@@ -331,10 +387,6 @@ func (p *pawn) doConstructOrder(m *gameMap) {
 		p.order = nil
 		return
 	}
-	//
-	//uCnst := order.constructingQueue[0]
-	//
-	//p.res.metalSpending = p.productionInfo.builderCoeff * uCnst.currentConstructionStatus.costM / uCnst.currentConstructionStatus.maxConstructionAmount
 }
 
 func (u *pawn) reportOrderCompletion(verb string) {

@@ -106,36 +106,24 @@ func (g *gameMap) getMineralsAtCoordinates(x, y int) int {
 	return g.tileMap[x][y].mineralsAmount
 }
 
-func (g *gameMap) getNumberOfMetalDepositsInRect(x, y, w, h int) int {
+func (g *gameMap) getVespeneAtCoordinates(x, y int) int {
+	return g.tileMap[x][y].vespeneAmount
+}
+
+func (g *gameMap) getNumberOfVespeneDepositsInRect(x, y, w, h int) int {
 	total := 0
 	for i := 0; i < w; i++ {
 		for j := 0; j < h; j++ {
-			if areCoordsValid(x+i, y+j) {
-				total += g.tileMap[x+i][y+j].metalAmount
+			if areCoordsValid(x+i, y+j) && g.tileMap[x+i][y+j].vespeneAmount > 0 {
+				total++
 			}
 		}
 	}
 	return total
 }
 
-func (g *gameMap) getNumberOfThermalDepositsInRect(x, y, w, h int) int {
-	total := 0
-	for i := 0; i < w; i++ {
-		for j := 0; j < h; j++ {
-			if areCoordsValid(x+i, y+j) {
-				total += g.tileMap[x+i][y+j].thermalAmount
-			}
-		}
-	}
-	return total
-}
-
-func (g *gameMap) getNumberOfMetalDepositsUnderBuilding(b *pawn) int {
-	return g.getNumberOfMetalDepositsInRect(b.x, b.y, b.buildingInfo.w, b.buildingInfo.h)
-}
-
-func (g *gameMap) getNumberOfThermalDepositsUnderBuilding(b *pawn) int {
-	return g.getNumberOfThermalDepositsInRect(b.x, b.y, b.buildingInfo.w, b.buildingInfo.h)
+func (g *gameMap) getNumberOfVespeneDepositsUnderBuilding(b *pawn) int {
+	return g.getNumberOfVespeneDepositsInRect(b.x, b.y, b.buildingInfo.w, b.buildingInfo.h)
 }
 
 func (g *gameMap) isPawnInPylonFieldOfFaction(p *pawn, f *faction) bool {
@@ -182,7 +170,7 @@ func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
 	if b.buildingInfo.canBeBuiltInPylonFieldOnly && !g.isPawnInPylonFieldOfFaction(b, b.faction) {
 		return false
 	}
-	if b.buildingInfo.canBeBuiltOnThermalOnly && g.getNumberOfThermalDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) == 0 {
+	if b.buildingInfo.canBeBuiltOnVespeneOnly && g.getNumberOfVespeneDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) < b.buildingInfo.w * b.buildingInfo.h {
 		return false
 	}
 	for x := bx; x < bx+b.buildingInfo.w; x++ {
@@ -229,5 +217,15 @@ func (g *gameMap) depleteMineralField(x, y int) {
 		currTile.mineralsAmount = 0
 		currTile.isPassable = true
 		currTile.appearance.char = '.'
+	}
+}
+
+func (g *gameMap) decreaseVespeneUnderMine(mine *pawn, amount int) {
+	if mine.res != nil && mine.res.providesVespene {
+		for x:=mine.x; x<mine.buildingInfo.w+mine.x; x++ {
+			for y:=mine.y; y<mine.buildingInfo.h+mine.y; y++ {
+				g.tileMap[x][y].vespeneAmount -= amount
+			}
+		}
 	}
 }

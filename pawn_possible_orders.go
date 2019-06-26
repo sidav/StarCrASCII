@@ -12,6 +12,10 @@ func (p *pawn) canCollectMinerals() bool {
 	return p.res != nil && p.res.maxMineralsCarry > 0
 }
 
+func (p *pawn) canCollectVespene() bool {
+	return p.res != nil && p.res.maxVespeneCarry > 0
+}
+
 func (p *pawn) canMove() bool {
 	return p.moveInfo != nil
 }

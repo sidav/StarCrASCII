@@ -77,13 +77,6 @@ func (ai *aiData) ai_buildEnergyIncome(builder *pawn) bool {
 }
 
 func (ai *aiData) ai_buildMetalIncome(builder *pawn) bool {
-	variants := builder.productionInfo.allowedBuildings
 	final_build_variant := ""
-	for _, variant := range variants {
-		candidate := createBuilding(variant, 0, 0, builder.faction)
-		if candidate.res != nil && candidate.res.isMetalExtractor {
-			final_build_variant = variant
-		}
-	}
 	return ai_tryBuildMetalExtractor(builder, final_build_variant)
 }

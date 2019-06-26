@@ -82,11 +82,6 @@ func renderInfoOnCursor(f *faction, g *gameMap) {
 					details = append(details, wpn.getDescriptionString())
 				}
 			}
-			//if res != nil {
-			//	economyInfo := fmt.Sprintf("METAL: (+%d / -%d) ENERGY: (+%d / -%d)",
-			//		res.metalIncome, res.metalSpending, res.energyIncome, res.energySpending+res.energyDrain)
-			//	details = append(details, economyInfo)
-			//}
 		}
 		cmenu.DrawSidebarInfoMenu(title, color, SIDEBAR_X, SIDEBAR_FLOOR_2, SIDEBAR_W, details)
 	}

@@ -10,6 +10,7 @@ const (
 	order_build  // maybe merge build and repair?
 	order_construct
 	order_gather_minerals
+	order_gather_vespene
 	order_return_resources
 	order_enter_container
 	order_unload

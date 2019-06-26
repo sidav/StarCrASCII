@@ -11,9 +11,9 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_terran,
-				allowedBuildings: []string{"tcommand", "tsupply", "tbarracks", "tautoturret", "tbunker"},
+				allowedBuildings: []string{"tcommand", "tsupply", "trefinery", "tbarracks", "tautoturret", "tbunker"},
 			},
-			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 5},
+			res: &pawnResourceInformation{maxMineralsCarry: 5, maxVespeneCarry: 4, ticksToMineMineral: 5},
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 1, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:4},
@@ -51,7 +51,7 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_zerg,
 				allowedBuildings: []string{"zhatchery"},
 			},
-			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 5},
+			res: &pawnResourceInformation{maxMineralsCarry: 5, maxVespeneCarry: 4, ticksToMineMineral: 5},
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 1, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:4},
@@ -65,9 +65,9 @@ func createUnit(codename string, x, y int, f *faction, alreadyConstructed bool) 
 			moveInfo:       &pawnMovementInformation{ticksForMoveSingleCell: 10, movesOnLand: true, movesOnSea: true}, regenPeriod: 7, radarRadius: 0,
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 10, costM: 50},
 			productionInfo: &productionInformation{builderCoeff: 1, buildType: buildtype_protoss,
-				allowedBuildings: []string{"pnexus", "ppylon", "pgateway", "pphotoncannon"},
+				allowedBuildings: []string{"pnexus", "ppylon", "passimilator", "pgateway", "pphotoncannon"},
 			},
-			res: &pawnResourceInformation{maxMineralsCarry: 5, ticksToMineMineral: 5},
+			res: &pawnResourceInformation{maxMineralsCarry: 5, maxVespeneCarry: 4, ticksToMineMineral: 5},
 			weapons: []*pawnWeaponInformation{
 				{attackDelay: 10, attackRadius: 1, attacksLand: true,
 					hitscan: &WeaponHitscan{baseDamage:4},

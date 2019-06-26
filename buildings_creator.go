@@ -34,6 +34,22 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 30, costM: 100},
 		}
 
+	case "trefinery":
+		colors := []int{
+			-1, 7, -1,
+			7, -1, 7,
+			-1, 7, -1,
+		}
+		app := &buildingAppearance{chars: "" +
+			"O=O" +
+			"|O|" +
+			"===", colors: colors}
+		b = &pawn{name: "Refinery", maxHitpoints: 500,
+			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: false, canBeBuiltOnVespeneOnly: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 100},
+			res:                       &pawnResourceInformation{providesVespene: true},
+		}
+
 	case "tbarracks":
 		colors := []int{
 			-1, 7, -1,
@@ -127,6 +143,21 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 		b = &pawn{name: "Pylon", maxHitpoints: 200, givesSupply: 8,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 40, costM: 100},
+		}
+	case "passimilator":
+		colors := []int{
+			-1, 7, -1,
+			7, -1, 7,
+			-1, 7, -1,
+		}
+		app := &buildingAppearance{chars: "" +
+			"/=\\" +
+			"(O)" +
+			"===", colors: colors}
+		b = &pawn{name: "Assimilator", maxHitpoints: 500,
+			buildingInfo:              &building{w: 3, h: 3, appearance: app, allowsTightPlacement: false, canBeBuiltOnVespeneOnly: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 100},
+			res:                       &pawnResourceInformation{providesVespene: true},
 		}
 	case "pgateway":
 		colors := []int{

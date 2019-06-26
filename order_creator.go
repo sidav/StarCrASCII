@@ -24,6 +24,12 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 			}
 			return
 		}
+		if target.res.providesVespene && p.canCollectVespene() && !target.isUnderConstruction() {
+			x, y := target.getCenter()
+			p.setOrder(&order{orderType: order_gather_vespene, targetPawn: target, x:x, y:y})
+			log.appendMessage(p.name + ": gathering vespene")
+			return
+		}
 		if target.canContainPawns() {
 			p.setOrder(&order{orderType: order_enter_container, targetPawn: target})
 			log.appendMessage(p.name + ": moving to container")

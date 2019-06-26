@@ -4,7 +4,10 @@ import (
 	cw "github.com/sidav/golibrl/console"
 )
 
-const MAP_DEFAULT_MINERALS_IN_PATCH = 250
+const (
+	MAP_DEFAULT_MINERALS_IN_PATCH = 250
+	MAP_DEFAULT_VESPENE_IN_DEPOSIT = 2500
+)
 
 func (g *gameMap) init() {
 	g.pawns = make([]*pawn, 0)
@@ -38,7 +41,7 @@ func mapinit_getTileByChar(char rune) *tile {
 	case '*':
 		return &tile{appearance: &ccell{char: '*', r: 0, g: 64, b: 192, color: cw.BLUE}, mineralsAmount: MAP_DEFAULT_MINERALS_IN_PATCH, isPassable: false}
 	case '$':
-		return &tile{appearance: &ccell{char: '$', r: 64, g: 64, b: 128, color: cw.DARK_GREEN}, thermalAmount: 1, isPassable: true}
+		return &tile{appearance: &ccell{char: '$', r: 64, g: 64, b: 128, color: cw.DARK_GREEN}, vespeneAmount: MAP_DEFAULT_VESPENE_IN_DEPOSIT, isPassable: true}
 	case '^':
 		return &tile{appearance: &ccell{char: '^', r: 64, g: 64, b: 128, color: cw.BEIGE}, isPassable: false}
 	case '~':
