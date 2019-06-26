@@ -197,7 +197,7 @@ func plr_giveOrderWithMouse(selection *[]*pawn, f *faction) {
 			continue
 		}
 		if click == "LEFT" {
-			if equivKey == "NONE" {
+			if equivKey == "NONE" && areGlobalCoordsOnScreen(cx, cy) {
 				reRenderNeeded = true
 				issueDefaultOrderToUnit(selectedPawn, CURRENT_MAP, cx, cy)
 				return
@@ -272,7 +272,7 @@ func plr_giveOrderForMultiSelectWithMouse(selection *[]*pawn, f *faction) {
 			continue
 		}
 		if click == "LEFT" {
-			if equivKey == "NONE" {
+			if equivKey == "NONE" && areGlobalCoordsOnScreen(cx, cy) {
 				for _, p := range *selection {
 					issueDefaultOrderToUnit(p, CURRENT_MAP, cx, cy)
 				}
