@@ -17,17 +17,17 @@ func issueDefaultOrderToUnit(p *pawn, m *gameMap, x, y int) {
 			log.appendMessage(p.name + ": attacking")
 			return
 		}
+		if target.res.providesVespene && p.canCollectVespene() {
+			x, y := target.getCenter()
+			p.setOrder(&order{orderType: order_gather_vespene, targetPawn: target, x:x, y:y})
+			log.appendMessage(p.name + ": gathering vespene")
+			return
+		}
 		if p.canConstructBuildings() && target.isBuilding() && target.isUnderConstruction() && target.currentConstructionStatus.isCompleted() == false {
 			if p.productionInfo.buildType == buildtype_terran && target.currentConstructionStatus.buildType == buildtype_terran {
 				p.setOrder(&order{orderType: order_build, buildingToConstruct: target})
 				log.appendMessage(p.name + ": builds")
 			}
-			return
-		}
-		if target.res.providesVespene && p.canCollectVespene() && !target.isUnderConstruction() {
-			x, y := target.getCenter()
-			p.setOrder(&order{orderType: order_gather_vespene, targetPawn: target, x:x, y:y})
-			log.appendMessage(p.name + ": gathering vespene")
 			return
 		}
 		if target.canContainPawns() {

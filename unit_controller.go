@@ -179,7 +179,7 @@ func (p *pawn) doGatherVespeneOrder() {
 			}
 			return
 		}
-		if gasMine.isTimeToAct() {
+		if gasMine.isTimeToAct() && !gasMine.isUnderConstruction() {
 			if gas > p.res.maxVespeneCarry {
 				CURRENT_MAP.decreaseVespeneUnderMine(gasMine, p.res.maxVespeneCarry)
 				p.res.vespeneCarry = p.res.maxVespeneCarry

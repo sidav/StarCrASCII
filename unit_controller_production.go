@@ -40,6 +40,9 @@ func doAllProduction(m *gameMap) { // does the building itself
 					m.addBuilding(tBld, false)
 					if u.productionInfo.buildType == buildtype_protoss {
 						u.order = nil
+						if tBld.res != nil && tBld.res.providesVespene && u.canCollectVespene() {
+							u.order = &order{orderType: order_gather_vespene, x: tBld.x, y: tBld.y, targetPawn: tBld}
+						}
 						u.reportOrderCompletion("Warp-in initiated.")
 					}
 					if u.productionInfo.buildType == buildtype_zerg {
@@ -71,6 +74,9 @@ func doAllProduction(m *gameMap) { // does the building itself
 				if tBld.currentConstructionStatus.isCompleted() {
 					tBld.currentConstructionStatus = nil
 					u.order = nil
+					if tBld.res != nil && tBld.res.providesVespene && u.canCollectVespene() {
+						u.order = &order{orderType: order_gather_vespene, x: tBld.x, y: tBld.y, targetPawn: tBld}
+					}
 					u.reportOrderCompletion("Construction completed")
 				}
 			}
