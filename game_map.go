@@ -234,6 +234,9 @@ func (g *gameMap) decreaseVespeneUnderMine(mine *pawn, amount int) {
 		for x:=mine.x; x<mine.buildingInfo.w+mine.x; x++ {
 			for y:=mine.y; y<mine.buildingInfo.h+mine.y; y++ {
 				g.tileMap[x][y].vespeneAmount -= amount
+				if g.tileMap[x][y].vespeneAmount < 1 { // never deplete the vespene completely
+					g.tileMap[x][y].vespeneAmount = 1
+				}
 			}
 		}
 	}
