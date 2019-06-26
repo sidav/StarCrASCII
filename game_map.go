@@ -10,6 +10,12 @@ var (
 	mapH int
 )
 
+const(
+	pathfinding_accurate = 150
+	pathfinding_regular = 100
+	pathfinding_fast = 50
+)
+
 type gameMap struct {
 	tileMap  [][]*tile
 	factions []*faction
@@ -204,8 +210,11 @@ func (g *gameMap) createCostMapForPathfinding() *[][]int {
 	return &costmap
 }
 
-func (g *gameMap) getPathFromTo(fx, fy, tx, ty int) *astar.Cell {
-	return astar.FindPath(g.createCostMapForPathfinding(), fx, fy, tx, ty, true, true, false)
+func (g *gameMap) getPathFromTo(fx, fy, tx, ty, desiredAccuracy int) *astar.Cell {
+	if desiredAccuracy < pathfinding_fast {
+		desiredAccuracy = pathfinding_fast
+	}
+	return astar.FindPath(g.createCostMapForPathfinding(), fx, fy, tx, ty, true, desiredAccuracy, true, false)
 }
 
 func (g *gameMap) depleteMineralField(x, y int) {

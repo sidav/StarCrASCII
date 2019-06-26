@@ -20,7 +20,7 @@ func (u *pawn) executeOrders(m *gameMap) {
 
 	switch order.orderType {
 	case order_move:
-		u.doMoveOrder()
+		u.doMoveOrder(0)
 	case order_attack:
 		u.doAttackOrder()
 	case order_attack_move:
@@ -45,7 +45,7 @@ func (u *pawn) executeOrders(m *gameMap) {
 
 }
 
-func (u *pawn) doMoveOrder() bool { // Returns true if route exists. TODO: rewrite
+func (u *pawn) doMoveOrder(desiredAccuracy int) bool { // Returns true if route exists. TODO: rewrite
 	order := u.order
 
 	ox, oy := order.x, order.y
@@ -55,7 +55,7 @@ func (u *pawn) doMoveOrder() bool { // Returns true if route exists. TODO: rewri
 	//vector := geometry.CreateVectorByStartAndEndInt(ux, uy, ox, oy)
 	//vector.TransformIntoUnitVector()
 	//vx, vy := vector.GetRoundedCoords()
-	path := CURRENT_MAP.getPathFromTo(ux, uy, ox, oy)
+	path := CURRENT_MAP.getPathFromTo(ux, uy, ox, oy, desiredAccuracy)
 	if path != nil {
 		vx, vy = path.GetNextStepVector()
 	}
@@ -132,7 +132,7 @@ func (p *pawn) doGatherMineralsOrder() {
 		if !geometry.AreCoordsInRange(ux, uy, mx, my, 1) {
 			order.x = mx
 			order.y = my
-			pathSuccess := p.doMoveOrder()
+			pathSuccess := p.doMoveOrder(0)
 			if !pathSuccess {
 				p.switchToAnotherMineralFieldNearby()
 			}
@@ -172,10 +172,10 @@ func (p *pawn) doGatherVespeneOrder() {
 			rx, ry := gasMine.getCoords()
 			w, h := gasMine.buildingInfo.w, gasMine.buildingInfo.h
 			order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, workerX, workerY)
-			pathSuccess := p.doMoveOrder()
+			pathSuccess := p.doMoveOrder(0)
 			if !pathSuccess {
 				order.x, order.y = mx, my
-				p.doMoveOrder()
+				p.doMoveOrder(0)
 			}
 			return
 		}
@@ -227,10 +227,10 @@ func (p *pawn) doReturnResourcesOrder() {
 			w, h = closestResourceReceiver.buildingInfo.w, closestResourceReceiver.buildingInfo.h 
 		}
 		order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, ux, uy)
-		pathSuccess := p.doMoveOrder()
+		pathSuccess := p.doMoveOrder(0)
 		if !pathSuccess {
 			order.x, order.y = closestResourceReceiver.getCenter()
-			p.doMoveOrder()
+			p.doMoveOrder(0)
 		}
 	}
 }
@@ -249,7 +249,7 @@ func (p *pawn) doAttackOrder() { // Only moves the unit to a firing position. Th
 	if !geometry.AreCoordsInRange(ux, uy, targetX, targetY, p.getMaxRadiusToFire()) {
 		order.x = targetX
 		order.y = targetY
-		p.doMoveOrder()
+		p.doMoveOrder(0)
 		return
 	}
 }
@@ -278,7 +278,7 @@ func (p *pawn) doEnterContainerOrder() {
 
 	} else {
 		order.x, order.y = cont.getCenter()
-		p.doMoveOrder()
+		p.doMoveOrder(0)
 		return
 	}
 }
@@ -330,7 +330,7 @@ func (p *pawn) doAttackMoveOrder() {
 		p.openFireIfPossible()
 	}
 	if p.isTimeToAct() {
-		p.doMoveOrder()
+		p.doMoveOrder(0)
 	}
 }
 
@@ -367,7 +367,7 @@ func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets 
 	if u.productionInfo.buildType == buildtype_zerg { // zerg will always move to center
 		// out of range, move to the construction site
 		order.x, order.y = tBld.getCenter()
-		u.doMoveOrder()
+		u.doMoveOrder(0)
 		log.appendMessage(u.name + " MOVES TO BUILD")
 		return
 	}
@@ -375,7 +375,7 @@ func (u *pawn) doBuildOrder(m *gameMap) { // only moves to location and/or sets 
 	if !tBld.IsCloseupToCoords(ux, uy) {
 		// out of range, move to the construction site
 		order.x, order.y = tBld.getCenter()
-		u.doMoveOrder()
+		u.doMoveOrder(0)
 		log.appendMessage(u.name + " MOVES TO BUILD")
 		return
 	}
