@@ -174,7 +174,8 @@ func (p *pawn) doGatherVespeneOrder() {
 			order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, workerX, workerY)
 			pathSuccess := p.doMoveOrder()
 			if !pathSuccess {
-				// TODO: What?
+				order.x, order.y = mx, my
+				p.doMoveOrder()
 			}
 			return
 		}
@@ -210,20 +211,27 @@ func (p *pawn) doReturnResourcesOrder() {
 			if p.res.mineralsCarry > 0 {
 				p.faction.economy.minerals += p.res.mineralsCarry
 				p.res.mineralsCarry = 0
-				p.nextTickToAct = CURRENT_TICK + 10
+				p.nextTickToAct = CURRENT_TICK + 25
 				order.orderType = order_gather_minerals
 			}
 			if p.res.vespeneCarry > 0 {
 				p.faction.economy.vespene += p.res.vespeneCarry
 				p.res.vespeneCarry = 0
-				p.nextTickToAct = CURRENT_TICK + 10
+				p.nextTickToAct = CURRENT_TICK + 25
 				order.orderType = order_gather_vespene
 			}
 		}
 		rx, ry := closestResourceReceiver.getCoords()
-		w, h := closestResourceReceiver.buildingInfo.w, closestResourceReceiver.buildingInfo.h
+		w, h := 1, 1
+		if closestResourceReceiver.isBuilding() {
+			w, h = closestResourceReceiver.buildingInfo.w, closestResourceReceiver.buildingInfo.h 
+		}
 		order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, ux, uy)
-		p.doMoveOrder()
+		pathSuccess := p.doMoveOrder()
+		if !pathSuccess {
+			order.x, order.y = closestResourceReceiver.getCenter()
+			p.doMoveOrder()
+		}
 	}
 }
 
