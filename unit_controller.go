@@ -163,12 +163,15 @@ func (p *pawn) doGatherVespeneOrder() {
 		p.order.orderType = order_move
 		return
 	}
+	workerX, workerY := p.getCoords()
 	gasMine := order.targetPawn
 	mx, my := gasMine.getCenter()
 	if p.res.vespeneCarry == 0 {
 		gas := CURRENT_MAP.getVespeneAtCoordinates(mx, my)
-		if !p.isInDistanceFromPawn(gasMine, 1) {
-			order.x, order.y = mx, my
+		if !gasMine.IsCloseupToCoords(workerX, workerY) {
+			rx, ry := gasMine.getCoords()
+			w, h := gasMine.buildingInfo.w, gasMine.buildingInfo.h
+			order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, workerX, workerY)
 			pathSuccess := p.doMoveOrder()
 			if !pathSuccess {
 				// TODO: What?
@@ -203,7 +206,7 @@ func (p *pawn) doReturnResourcesOrder() {
 		p.nextTickToAct = CURRENT_TICK + 10
 		return
 	} else {
-		if closestResourceReceiver.isInDistanceFromPawn(p, 1) { // resources unload
+		if closestResourceReceiver.IsCloseupToCoords(ux, uy) { // resources unload
 			if p.res.mineralsCarry > 0 {
 				p.faction.economy.minerals += p.res.mineralsCarry
 				p.res.mineralsCarry = 0
@@ -217,7 +220,9 @@ func (p *pawn) doReturnResourcesOrder() {
 				order.orderType = order_gather_vespene
 			}
 		}
-		order.x, order.y = closestResourceReceiver.getCenter()
+		rx, ry := closestResourceReceiver.getCoords()
+		w, h := closestResourceReceiver.buildingInfo.w, closestResourceReceiver.buildingInfo.h
+		order.x, order.y = geometry.GetCellNearestToRectFrom(rx, ry, w, h, ux, uy)
 		p.doMoveOrder()
 	}
 }
