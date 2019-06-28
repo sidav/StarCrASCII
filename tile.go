@@ -5,4 +5,5 @@ type tile struct {
 	isNaval, isPassable bool
 	mineralsAmount      int
 	vespeneAmount       int
+	creep               bool
 }
