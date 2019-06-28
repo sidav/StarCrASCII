@@ -52,6 +52,7 @@ func main() {
 	///////////////////////////////////
 
 	for {
+		var creepers []*pawn
 		startTime := time.Now()
 		for _, f := range CURRENT_MAP.factions {
 			f.recalculateSeenTiles()
@@ -84,6 +85,13 @@ func main() {
 				}
 				u.executeOrders(CURRENT_MAP)
 				u.openFireIfPossible()
+				if u.creepSpreadRadius > 0 && CURRENT_TICK % 100 == 0 {
+					creepers = append(creepers, u)
+				}
+			}
+			if CURRENT_TICK % 100 == 0 {
+				CURRENT_MAP.renewCreepSpread(&creepers)
+				creepers = nil
 			}
 			if FIRE_WAS_OPENED_ON_SCREEN_THIS_TURN {
 				cw.Flush_console()

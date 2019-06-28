@@ -10,10 +10,10 @@ var (
 	mapH int
 )
 
-const(
+const (
 	pathfinding_accurate = 150
-	pathfinding_regular = 100
-	pathfinding_fast = 50
+	pathfinding_regular  = 100
+	pathfinding_fast     = 50
 )
 
 type gameMap struct {
@@ -176,7 +176,7 @@ func (g *gameMap) canBuildingBeBuiltAt(b *pawn, cx, cy int) bool {
 	if b.buildingInfo.canBeBuiltInPylonFieldOnly && !g.isPawnInPylonFieldOfFaction(b, b.faction) {
 		return false
 	}
-	if b.buildingInfo.canBeBuiltOnVespeneOnly && g.getNumberOfVespeneDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) < b.buildingInfo.w * b.buildingInfo.h {
+	if b.buildingInfo.canBeBuiltOnVespeneOnly && g.getNumberOfVespeneDepositsInRect(bx, by, b.buildingInfo.w, b.buildingInfo.h) < b.buildingInfo.w*b.buildingInfo.h {
 		return false
 	}
 	for x := bx; x < bx+b.buildingInfo.w; x++ {
@@ -231,8 +231,8 @@ func (g *gameMap) depleteMineralField(x, y int) {
 
 func (g *gameMap) decreaseVespeneUnderMine(mine *pawn, amount int) {
 	if mine.res != nil && mine.res.providesVespene {
-		for x:=mine.x; x<mine.buildingInfo.w+mine.x; x++ {
-			for y:=mine.y; y<mine.buildingInfo.h+mine.y; y++ {
+		for x := mine.x; x < mine.buildingInfo.w+mine.x; x++ {
+			for y := mine.y; y < mine.buildingInfo.h+mine.y; y++ {
 				g.tileMap[x][y].vespeneAmount -= amount
 				if g.tileMap[x][y].vespeneAmount < 1 { // never deplete the vespene completely
 					g.tileMap[x][y].vespeneAmount = 1

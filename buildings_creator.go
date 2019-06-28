@@ -108,7 +108,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"=/\\=" +
 			"=\\/=" +
 			"\\||/", colors: colors}
-		b = &pawn{name: "Hatchery", maxHitpoints: 1000, givesSupply: 10,
+		b = &pawn{name: "Hatchery", maxHitpoints: 1000, givesSupply: 10, creepSpreadRadius: 5,
 			buildingInfo:              &building{w: 4, h: 4, appearance: app, allowsTightPlacement: false},
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 300},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"zdrone"}},

@@ -24,6 +24,7 @@ type pawn struct {
 	nextTickToAct             int
 	isDisabled                bool // when out of the pylon field
 	isCommander               bool
+	creepSpreadRadius         int
 	sightRadius, radarRadius  int
 
 	repeatConstructionQueue bool // for factories
@@ -95,13 +96,13 @@ func (p *pawn) IsCloseupToCoords(x, y int) bool {
 	}
 }
 
-//func (p *pawn) isInDistanceFromCoords(x, y, r int) bool {
-//	if p.buildingInfo != nil {
-//		return geometry.AreCoordsInRangeFromRect(x, y, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h, r)
-//	} else {
-//		return geometry.AreCoordsInRange(x, y, p.x, p.y, r)
-//	}
-//}
+func (p *pawn) isInDistanceFromCoords(x, y, r int) bool {
+	if p.buildingInfo != nil {
+		return geometry.AreCoordsInRangeFromRect(x, y, p.x, p.y, p.buildingInfo.w, p.buildingInfo.h, r)
+	} else {
+		return geometry.AreCoordsInRange(x, y, p.x, p.y, r)
+	}
+}
 
 func (p1 *pawn) isInDistanceFromPawn(p2 *pawn, r int) bool {
 	if p1.buildingInfo != nil {
