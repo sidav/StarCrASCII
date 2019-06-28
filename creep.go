@@ -35,31 +35,32 @@ func (g *gameMap) isCellNeighbouringACreep(x, y int) bool {
 }
 
 func (g *gameMap) renewCreepSpread(creepers *[]*pawn) {
-	// noCreepersNearby := true
-	totalCreepers := len(*creepers)
+	newCreepTiles := make([]*tile, 0)
+	removeCreepTiles := make([]*tile, 0)
 	for x := 0; x < mapW; x++ {
 	nextCell:
 		for y := 0; y < mapH; y++ {
-			if totalCreepers > 0 {
-				for _, creeper := range *creepers {
-					if creeper.isInDistanceFromCoords(x, y, creeper.creepSpreadRadius) && !creeper.isUnderConstruction() &&
-						(g.isCellNeighbouringACreep(x, y) || creeper.IsCloseupToCoords(x, y)) {
-						if (x+y+CURRENT_TICK/CREEP_SPREAD_PERIOD)%3 == 0 {
-							g.tileMap[x][y].creep = true
-						}
-						continue nextCell
-					}
+			curTile := g.tileMap[x][y]
+			isInDistance := false
+			for _, creeper := range *creepers {
+				isInDistance = creeper.isInDistanceFromCoords(x, y, creeper.creepSpreadRadius) && !creeper.isUnderConstruction()
+				if isInDistance && curTile.creep {
+					continue nextCell
+				}
+				if isInDistance && (g.isCellNeighbouringACreep(x, y) || creeper.IsCloseupToCoords(x, y)) && (x+y+CURRENT_TICK/CREEP_SPREAD_PERIOD) % 2 == 0 {
+					newCreepTiles = append(newCreepTiles, curTile)
+					continue nextCell
 				}
 			}
-			if  g.tileMap[x][y].creep && g.getNumberOfCreepInRect(x-1, y-1, 3, 3) <= 5 && (x+y+CURRENT_TICK/CREEP_SPREAD_PERIOD) % 3 == 0 {
-				g.tileMap[x][y].creep = false
+			if !isInDistance && curTile.creep && g.getNumberOfCreepInRect(x-1, y-1, 3, 3) <= 5 && (x+y+CURRENT_TICK/CREEP_SPREAD_PERIOD)%3 == 0 {
+				removeCreepTiles = append(removeCreepTiles, curTile)
 			}
 		}
 	}
+	for _, c := range newCreepTiles {
+		c.creep = true
+	}
+	for _, c := range removeCreepTiles {
+		c.creep = false
+	}
 }
-//
-//func (g *gameMap) spreadCreep(creeper *pawn) bool {
-//	for r := 1; r <= creeper.creepSpreadRadius; r++ {
-//
-//	}
-//}
