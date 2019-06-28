@@ -91,7 +91,7 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			"\\T", colors: colors}
 		b = &pawn{name: "Auto turret", maxHitpoints: 150, regenPeriod: 20, sightRadius: 7,
 			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
-			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 50, costM: 125},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 50, costM: 125, costV: 50},
 			weapons: []*pawnWeaponInformation{{attackDelay: 10, attackRadius: 6, attacksLand: true,
 				hitscan: &WeaponHitscan{baseDamage: 5, lightMod: 2},
 			}},
@@ -113,6 +113,17 @@ func createBuilding(codename string, x, y int, f *faction) *pawn {
 			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 75, costM: 300},
 			productionInfo:            &productionInformation{builderCoeff: 1, allowedUnits: []string{"zdrone"}},
 			res:                       &pawnResourceInformation{receivesResources: true},
+		}
+	case "zcreepcolony":
+		colors := []int{
+			-1, -1,
+			-1, -1}
+		app := &buildingAppearance{chars: "" +
+			"8\\" +
+			"\\0" , colors: colors}
+		b = &pawn{name: "Creep Colony", maxHitpoints: 200, givesSupply: 8, creepSpreadRadius: 6,
+			buildingInfo:              &building{w: 2, h: 2, appearance: app, allowsTightPlacement: true},
+			currentConstructionStatus: &underConstructionInformation{maxConstructionAmount: 40, costM: 50},
 		}
 
 		//protoss
