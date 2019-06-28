@@ -93,8 +93,9 @@ func renderMapInViewport(f *faction, g *gameMap) {
 						if mins > 0 && mins < MAP_DEFAULT_MINERALS_IN_PATCH/2 {
 							chr = ';'
 						}
-						if g.tileMap[x][y].creep {
+						if g.tileMap[x][y].creep && g.tileMap[x][y].vespeneAmount == 0 && g.tileMap[x][y].mineralsAmount == 0 {
 							cw.SetFgColor(cw.DARK_MAGENTA)
+							chr = ','
 						} else {
 							r_setFgColorByCcell(tileApp)
 						}

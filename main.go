@@ -85,11 +85,11 @@ func main() {
 				}
 				u.executeOrders(CURRENT_MAP)
 				u.openFireIfPossible()
-				if u.creepSpreadRadius > 0 && CURRENT_TICK % 100 == 0 {
+				if isTimeToSpreadCreep() && u.creepSpreadRadius > 0 {
 					creepers = append(creepers, u)
 				}
 			}
-			if CURRENT_TICK % 100 == 0 {
+			if isTimeToSpreadCreep() {
 				CURRENT_MAP.renewCreepSpread(&creepers)
 				creepers = nil
 			}
